@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll",
-    "test:staged": "jest",
-    "prepare": "husky install"
+    "test:staged": "jest"
   },
   "standard": {
     "env": [
@@ -18,7 +17,7 @@
   "devDependencies": {
     "husky": "^4.0.0",
     "jest": "^28.1.0",
-    "lint-staged": "^12.4.1",
+    "lint-staged": "^9.4.3",
     "standard": "^17.0.0"
   }
 }
