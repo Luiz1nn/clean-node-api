@@ -4,15 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll",
-    "test:staged": "jest --passWithNoTests"
+    "test": "jest --watch --silent --colors --noStackTrace",
+    "test:staged": "jest --passWithNoTests --findRelatedTests --silent"
   },
   "standard": {
     "env": [
       "jest"
     ]
   },
-  "author": "Luis Fernando (Luizinn)",
+  "author": "Luis Fernando (Luiz1nn)",
   "license": "ISC",
   "devDependencies": {
     "husky": "^4.0.0",
