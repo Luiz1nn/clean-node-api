@@ -18,7 +18,6 @@ class AuthUseCase {
     if (!this.loadUserByEmailRepository.load) {
       throw new InvalidParamError('loadUserByEmailRepository')
     }
-
     const user = await this.loadUserByEmailRepository.load(email)
     if (!user) {
       return null
