@@ -5,7 +5,8 @@
   "author": "Luis Fernando <luisfernandobr2003@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:staged": "vitest run"
   },
   "devDependencies": {
     "@types/node": "^20.4.8",
