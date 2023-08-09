@@ -5,7 +5,7 @@
   "author": "Luis Fernando <luisfernandobr2003@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest --passWithNoTests",
     "test:staged": "vitest run --passWithNoTests"
   },
   "devDependencies": {
