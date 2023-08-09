@@ -5,8 +5,8 @@
   "author": "Luis Fernando <luisfernandobr2003@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "vitest run",
-    "test:staged": "vitest run"
+    "test": "vitest run --passWithNoTests",
+    "test:staged": "vitest run --passWithNoTests"
   },
   "devDependencies": {
     "@types/node": "^20.4.8",
@@ -21,5 +21,10 @@
     "lint-staged": "^13.2.3",
     "typescript": "^5.1.6",
     "vitest": "^0.34.1"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint 'src/**' --fix"
+    ]
   }
 }
