@@ -9,8 +9,5 @@
     "strict": true,
     "skipLibCheck": true,
     "baseUrl": "./",
-    "paths": {
-      "~/protocols": ["./src/presentation/protocols"]
-    }
   }
 }
