@@ -1,7 +1,7 @@
 import { describe, expect, it, vitest } from 'vitest'
-import { SignUpController } from './signup'
-import { InvalidParamError, MissingParamError, ServerError } from '../errors'
 import type { AccountModel, AddAccount, AddAccountModel } from '~/domain'
+import { SignUpController } from './signup'
+import { MissingParamError, InvalidParamError, ServerError } from '../errors'
 import type { EmailValidator } from '../protocols'
 
 const makeEmailValidator = (): EmailValidator => {
