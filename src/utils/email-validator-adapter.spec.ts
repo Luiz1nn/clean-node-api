@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import validator from 'validator'
-import { EmailValidatorAdapter } from './email-validator'
+import { EmailValidatorAdapter } from './email-validator-adapter'
 
 vi.mock('validator', async () => {
   const actual = await vi.importActual('validator')
