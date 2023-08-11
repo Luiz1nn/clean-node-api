@@ -5,12 +5,16 @@
   "author": "Luis Fernando <luisfernandobr2003@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "vitest --passWithNoTests",
-    "test:staged": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "test:verbose": "yarn test",
+    "test:unit": "vitest watch",
+    "test:staged": "yarn test",
+    "test:ci": "yarn test -- --coverage"
   },
   "devDependencies": {
     "@types/node": "^20.4.8",
     "@typescript-eslint/eslint-plugin": "5.52.0",
+    "@vitest/coverage-v8": "^0.34.1",
     "eslint": "8.0.1",
     "eslint-config-standard-with-typescript": "^37.0.0",
     "eslint-plugin-import": "2.25.2",
