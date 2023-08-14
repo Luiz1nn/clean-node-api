@@ -5,6 +5,7 @@
   "author": "Luis Fernando <luisfernandobr2003@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "start": "tsx watch src/main/server.ts",
     "test": "vitest run --passWithNoTests --no-threads",
     "test:verbose": "yarn test",
     "test:unit": "vitest watch --no-threads",
@@ -26,6 +27,7 @@
     "git-commit-msg-linter": "^5.0.4",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
+    "tsx": "^3.12.7",
     "typescript": "^5.1.6",
     "vitest": "^0.34.1",
     "vitest-mongodb": "^0.0.5"
@@ -37,6 +39,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "fastify": "^4.21.0",
     "mongodb": "^5.7.0",
     "validator": "^13.11.0"
   }
