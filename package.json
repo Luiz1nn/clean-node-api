@@ -12,6 +12,7 @@
     "test:ci": "yarn test -- --coverage"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/node": "^20.4.8",
     "@types/validator": "^13.11.1",
     "@typescript-eslint/eslint-plugin": "5.52.0",
@@ -33,6 +34,7 @@
     ]
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "validator": "^13.11.0"
   }
 }
