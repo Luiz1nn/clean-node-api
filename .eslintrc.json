@@ -5,6 +5,8 @@
   },
   "rules": {
     "@typescript-eslint/strict-boolean-expressions": "off",
-    "@typescript-eslint/no-confusing-void-expression": "off"
+    "@typescript-eslint/no-confusing-void-expression": "off",
+    "@typescript-eslint/naming-convention": "off",
+    "no-var": "off"
   }
 }

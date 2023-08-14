@@ -7,6 +7,9 @@ beforeAll(async () => {
     serverOptions: {
       instance: {
         dbName: 'vitest'
+      },
+      binary: {
+        version: '4.0.3'
       }
     }
   })
