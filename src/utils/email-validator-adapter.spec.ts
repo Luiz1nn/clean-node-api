@@ -3,9 +3,9 @@ import validator from 'validator'
 import { EmailValidatorAdapter } from './email-validator-adapter'
 
 vi.mock('validator', async () => {
-  const actual = await vi.importActual('validator')
+  const actual: typeof validator = await vi.importActual('validator')
   return {
-    ...(actual as typeof validator),
+    ...actual,
     isEmail (): boolean {
       return true
     }
