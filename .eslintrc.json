@@ -7,6 +7,7 @@
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/no-confusing-void-expression": "off",
     "@typescript-eslint/naming-convention": "off",
+    "@typescript-eslint/no-floating-promises": "off",
     "no-var": "off"
   }
 }

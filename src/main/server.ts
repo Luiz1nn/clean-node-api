@@ -1,7 +1,8 @@
-import fastify from 'fastify'
+import { app } from './config'
 
-const app = fastify()
-app.listen({
-  host: '0.0.0.0',
-  port: 5050
-}, () => console.log('Server Runnnig at http://localhost:5050 🚀'))
+app
+  .listen({
+    host: '0.0.0.0',
+    port: 5050
+  })
+  .then(() => console.log('🚀 HTTP Server Running'))
