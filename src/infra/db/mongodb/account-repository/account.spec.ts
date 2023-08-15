@@ -4,7 +4,7 @@ import { MongoHelper } from '../helper'
 
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect()
+    await MongoHelper.connect(globalThis.__MONGO_URI__)
   })
 
   afterAll(async () => {
