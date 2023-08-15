@@ -7,7 +7,7 @@
   "scripts": {
     "start": "tsx watch src/main/server.ts",
     "test": "vitest run --passWithNoTests --no-threads",
-    "test:verbose": "yarn test",
+    "test:verbose": "vitest watch --no-threads --reporter verbose",
     "test:unit": "vitest watch --no-threads",
     "test:staged": "yarn test",
     "test:ci": "yarn test -- --coverage"
@@ -43,6 +43,7 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "express": "^4.18.2",
+    "fast-glob": "^3.3.1",
     "mongodb": "^5.7.0",
     "validator": "^13.11.0"
   }
