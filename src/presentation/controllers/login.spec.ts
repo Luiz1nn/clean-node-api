@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { LoginController } from './login'
-import { badRequest, serverError, unauthorized } from '../helpers'
+import { badRequest, ok, serverError, unauthorized } from '../helpers'
 import { InvalidParamError, MissingParamError } from '../errors'
 import type { EmailValidator, HttpRequest } from '../protocols'
 import { type Authentication } from '~/domain'
@@ -102,7 +102,9 @@ describe('Login Controller', () => {
 
   it('should return 401 if invalid credentials are provided', async () => {
     const { sut, authenticationStub } = makeSut()
-    vi.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise(resolve => resolve('null')))
+    vi.spyOn(authenticationStub, 'auth').mockImplementationOnce(async () => {
+      return null as unknown as string
+    })
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(unauthorized())
   })
@@ -114,5 +116,11 @@ describe('Login Controller', () => {
     )
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  it('should return 200 if valid credentials are provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
   })
 })
