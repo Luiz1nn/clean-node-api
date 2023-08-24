@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { makeSingUpValidation } from './signup-validation'
-import { ValidationComposite, RequiredFieldValidation, type Validation } from '~/presentation'
+import { ValidationComposite, RequiredFieldValidation, type Validation, CompareFieldsValidation } from '~/presentation'
 
 vi.mock('~/presentation')
 
@@ -11,6 +11,7 @@ describe('SignUpValidation Factory', () => {
     for (const field of ['name', 'email', 'password', 'passwordConfirmation']) {
       validations.push(new RequiredFieldValidation(field))
     }
+    validations.push(new CompareFieldsValidation('password', 'passwordConfirmation'))
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
 })
