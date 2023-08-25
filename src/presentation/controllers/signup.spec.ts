@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, vitest } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import type { AccountModel, AddAccount, AddAccountModel } from '~/domain'
 import { SignUpController } from './signup'
 import { MissingParamError, ServerError } from '../errors'
@@ -60,7 +60,7 @@ const makeSut = (): SutTypes => {
 describe('SignUp Controller', () => {
   it('should return 500 if AddAccount throws', async () => {
     const { sut, addAccountStub } = makeSut()
-    vitest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
+    vi.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
       throw new Error()
     })
     const httpResponse = await sut.handle(makeFakeRequest())
@@ -69,7 +69,7 @@ describe('SignUp Controller', () => {
 
   it('should call AddAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut()
-    const addSpy = vitest.spyOn(addAccountStub, 'add')
+    const addSpy = vi.spyOn(addAccountStub, 'add')
     await sut.handle(makeFakeRequest())
     expect(addSpy).toHaveBeenCalledWith({
       name: 'any_name',
@@ -86,7 +86,7 @@ describe('SignUp Controller', () => {
 
   it('should call Validation with correct value', async () => {
     const { sut, validationStub } = makeSut()
-    const validateSpy = vitest.spyOn(validationStub, 'validate')
+    const validateSpy = vi.spyOn(validationStub, 'validate')
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)

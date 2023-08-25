@@ -1,7 +1,7 @@
 import { DbAddAccount } from '~/data'
 import { BcryptAdapter, AccountMongoRepository, LogMongoRepository } from '~/infra'
+import { LogControllerDecorator } from '~/main'
 import { type Controller, SignUpController } from '~/presentation'
-import { LogControllerDecorator } from '../decorators'
 import { makeSignUpValidation } from './signup-validation'
 
 export const makeSignUpController = (): Controller => {
