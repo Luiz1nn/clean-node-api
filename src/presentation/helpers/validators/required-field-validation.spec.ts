@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { RequiredFieldValidation } from './required-field-validation'
-import { MissingParamError } from '~/presentation/errors'
+import { MissingParamError } from '~/presentation'
 
 describe('RequiredField Validation', () => {
   it('should return a MissingParamError if validation fails', () => {
