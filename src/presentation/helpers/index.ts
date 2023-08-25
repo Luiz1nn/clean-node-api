@@ -1,2 +1,2 @@
 export * from './validators'
-export * from './http-helper'
+export * from './http'
