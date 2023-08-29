@@ -10,7 +10,7 @@
     "test:verbose": "vitest watch --no-threads --reporter verbose",
     "test:unit": "vitest spec watch --no-threads",
     "test:integration": "vitest test watch --no-threads",
-    "test:staged": "yarn test",
+    "test:staged": "vitest run --changed --passWithNoTests --no-threads",
     "test:ci": "yarn test -- --coverage"
   },
   "devDependencies": {
