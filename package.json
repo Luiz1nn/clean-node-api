@@ -1,8 +1,8 @@
 {
   "name": "clean-node-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "index.js",
-  "author": "Luis Fernando <luisfernandobr2003@gmail.com>",
+  "author": "Luis Fernando || Luiz1nn",
   "license": "MIT",
   "scripts": {
     "start": "tsx watch src/main/server.ts",
