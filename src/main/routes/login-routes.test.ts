@@ -1,8 +1,11 @@
 import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest'
 import request from 'supertest'
+import type { Collection } from 'mongodb'
+import { hash } from 'bcrypt'
 import { MongoHelper } from '~/infra'
 import { app } from '../config'
 
+let accountCollection: Collection
 describe('Login Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(globalThis.__MONGO_URI__)
@@ -13,7 +16,7 @@ describe('Login Routes', () => {
   })
 
   beforeEach(async () => {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
@@ -26,6 +29,24 @@ describe('Login Routes', () => {
           email: 'luis@gmail.com',
           password: '123',
           passwordConfirmation: '123'
+        })
+        .expect(200)
+    })
+  })
+
+  describe('POST / login', () => {
+    it('should return 200 on login', async () => {
+      const password = await hash('123', 12)
+      await accountCollection.insertOne({
+        name: 'Luis',
+        email: 'luis@gmail.com',
+        password
+      })
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'luis@gmail.com',
+          password: '123'
         })
         .expect(200)
     })
