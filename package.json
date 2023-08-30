@@ -9,7 +9,7 @@
     "test": "vitest run --passWithNoTests --no-threads",
     "test:verbose": "vitest watch --no-threads --reporter verbose",
     "test:unit": "vitest spec watch --changed --no-threads",
-    "test:integration": "vitest test watch --no-threads",
+    "test:integration": "vitest test watch --changed --no-threads",
     "test:staged": "vitest run --changed --passWithNoTests --no-threads",
     "test:ci": "yarn test -- --coverage"
   },
