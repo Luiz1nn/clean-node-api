@@ -1,6 +1,6 @@
 import type { AddAccount } from '~/domain'
-import { type Validation, badRequest, ok, serverError } from '../helpers'
-import type { HttpResponse, Controller, HttpRequest } from '../protocols'
+import { badRequest, ok, serverError } from '~/presentation'
+import type { Validation, HttpResponse, Controller, HttpRequest } from '~/presentation'
 
 export class SignUpController implements Controller {
   constructor (

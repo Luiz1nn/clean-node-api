@@ -1,9 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { AccountModel, AddAccount, AddAccountModel } from '~/domain'
-import { SignUpController } from './signup'
-import { MissingParamError, ServerError } from '../errors'
-import type { HttpRequest } from '../protocols'
-import { type Validation, badRequest, ok, serverError } from '../helpers'
+import { MissingParamError, ServerError, badRequest, ok, serverError } from '~/presentation'
+import type { Validation, HttpRequest } from '~/presentation'
+import { SignUpController } from './signup-controller'
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {

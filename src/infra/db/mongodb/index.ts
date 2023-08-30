@@ -1,3 +1,3 @@
-export * from './account-repository'
+export * from './account'
 export * from './helper'
-export * from './log-repository'
+export * from './log'

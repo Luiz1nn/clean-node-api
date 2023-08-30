@@ -1,9 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { AuthenticationModel, Authentication } from '~/domain'
-import { LoginController } from './login'
-import { type Validation, badRequest, ok, serverError, unauthorized } from '../helpers'
-import { MissingParamError } from '../errors'
-import type { HttpRequest } from '../protocols'
+import { MissingParamError, badRequest, ok, serverError, unauthorized } from '~/presentation'
+import type { Validation, HttpRequest } from '~/presentation'
+import { LoginController } from './login-controller'
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import type { LogErrorRepository } from '~/data'
 import { ok, serverError } from '~/presentation'
 import type { Controller, HttpRequest, HttpResponse } from '~/presentation'
-import { LogControllerDecorator } from './log'
+import { LogControllerDecorator } from './log-controller-decorator'
 import { type AccountModel } from '~/domain'
 
 const makeController = (): Controller => {

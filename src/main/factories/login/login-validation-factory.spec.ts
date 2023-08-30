@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { ValidationComposite, RequiredFieldValidation, EmailValidation } from '~/presentation'
 import type { Validation, EmailValidator } from '~/presentation'
-import { makeLoginValidation } from './login-validation'
+import { makeLoginValidation } from './login-validation-factory'
 
 vi.mock('~/presentation')
 
