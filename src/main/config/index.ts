@@ -1,4 +1,5 @@
-import app from './app'
+import env from './env'
 
-export { app }
-export { default as env } from './env'
+export { env }
+
+export { setupApp } from './app'

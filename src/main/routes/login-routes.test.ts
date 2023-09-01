@@ -1,13 +1,23 @@
-import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest'
 import request from 'supertest'
-import type { Collection } from 'mongodb'
 import { hash } from 'bcrypt'
+import type { Express } from 'express'
+import type { Collection } from 'mongodb'
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  it
+} from 'vitest'
 import { MongoHelper } from '~/infra'
-import { app } from '../config'
+import { setupApp } from '../config'
 
 let accountCollection: Collection
+let app: Express
+
 describe('Login Routes', () => {
   beforeAll(async () => {
+    app = await setupApp()
     await MongoHelper.connect(globalThis.__MONGO_URI__)
   })
 
