@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node dist/main/server.js",
     "build": "rimraf dist && tsup",
+    "debug": "node --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
     "up": "yarn build && docker-compose up -d",
     "down": "docker-compose down",
     "test": "vitest run --passWithNoTests --no-threads",
@@ -37,7 +38,6 @@
     "rimraf": "^5.0.1",
     "supertest": "^6.3.3",
     "tsup": "^7.2.0",
-    "tsx": "^3.12.7",
     "typescript": "^5.1.6",
     "vitest": "^0.34.1",
     "vitest-mongodb": "^0.0.5"
