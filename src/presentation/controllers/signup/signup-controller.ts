@@ -1,11 +1,12 @@
-import type { AddAccount } from '~/domain'
+import type { AddAccount, Authentication } from '~/domain'
 import { badRequest, ok, serverError } from '~/presentation'
 import type { Validation, HttpResponse, Controller, HttpRequest } from '~/presentation'
 
 export class SignUpController implements Controller {
   constructor (
     private readonly addAccount: AddAccount,
-    private readonly validation: Validation
+    private readonly validation: Validation,
+    private readonly authentication: Authentication
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -22,6 +23,8 @@ export class SignUpController implements Controller {
         email,
         password
       })
+
+      await this.authentication.auth({ email, password })
 
       return ok(account)
     } catch (error) {
