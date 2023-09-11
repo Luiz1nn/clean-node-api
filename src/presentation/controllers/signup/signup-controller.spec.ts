@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { AccountModel, AddAccount, AddAccountModel, Authentication, AuthenticationModel } from '~/domain'
-import { MissingParamError, ServerError, badRequest, ok, serverError } from '~/presentation'
+import { EmailInUseError, MissingParamError, ServerError, badRequest, ok, serverError, forbidden } from '~/presentation'
 import type { Validation, HttpRequest } from '~/presentation'
 import { SignUpController } from './signup-controller'
 
@@ -87,6 +87,13 @@ describe('SignUp Controller', () => {
       email: 'any_email@mail.com',
       password: 'any_password'
     })
+  })
+
+  it('should return 403 if AddAccount returns null', async () => {
+    const { sut, addAccountStub } = makeSut()
+    vi.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
 
   it('should return 200 if valid data is provided', async () => {
