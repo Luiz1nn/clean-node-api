@@ -1,5 +1,5 @@
 import type { AddAccount, Authentication } from '~/domain'
-import { badRequest, ok, serverError } from '~/presentation'
+import { EmailInUseError, badRequest, ok, serverError, forbidden } from '~/presentation'
 import type { Validation, HttpResponse, Controller, HttpRequest } from '~/presentation'
 
 export class SignUpController implements Controller {
@@ -18,11 +18,15 @@ export class SignUpController implements Controller {
 
       const { name, email, password } = httpRequest.body
 
-      await this.addAccount.add({
+      const account = await this.addAccount.add({
         name,
         email,
         password
       })
+
+      if (!account) {
+        return forbidden(new EmailInUseError())
+      }
 
       const accessToken = await this.authentication.auth({ email, password })
 
