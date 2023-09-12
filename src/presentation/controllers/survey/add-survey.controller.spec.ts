@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { HttpRequest, Validation } from '~/presentation'
+import { badRequest, type HttpRequest, type Validation } from '~/presentation'
 import { AddSurveyController } from './add-survey.controller'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -42,5 +42,12 @@ describe('AddSurvey Controller', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  it('should return 400 if Validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    vi.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 })
