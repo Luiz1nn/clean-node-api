@@ -1,7 +1,11 @@
-import type { AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '~/data'
+import { ObjectId } from 'mongodb'
+import type {
+  AddAccountRepository,
+  LoadAccountByEmailRepository,
+  UpdateAccessTokenRepository
+} from '~/data'
 import type { AddAccountModel, AccountModel } from '~/domain'
 import { MongoHelper } from '../helper'
-import { ObjectId } from 'mongodb'
 
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository {
   async add (accountData: AddAccountModel): Promise<AccountModel> {

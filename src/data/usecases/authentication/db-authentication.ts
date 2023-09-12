@@ -1,4 +1,9 @@
-import type { HashComparer, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenRepository } from '~/data'
+import type {
+  Encrypter,
+  HashComparer,
+  UpdateAccessTokenRepository,
+  LoadAccountByEmailRepository
+} from '~/data'
 import type { Authentication, AuthenticationModel } from '~/domain'
 
 export class DbAuthentication implements Authentication {

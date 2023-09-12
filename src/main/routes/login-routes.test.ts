@@ -1,14 +1,8 @@
+import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest'
 import request from 'supertest'
 import { hash } from 'bcrypt'
 import type { Express } from 'express'
 import type { Collection } from 'mongodb'
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  it
-} from 'vitest'
 import { MongoHelper } from '~/infra'
 import { setupApp } from '../config'
 

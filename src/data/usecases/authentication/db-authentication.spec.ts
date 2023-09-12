@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { HashComparer, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenRepository } from '~/data'
+import type {
+  Encrypter,
+  HashComparer,
+  LoadAccountByEmailRepository,
+  UpdateAccessTokenRepository
+} from '~/data'
 import type { AccountModel, AuthenticationModel } from '~/domain'
 import { DbAuthentication } from './db-authentication'
 

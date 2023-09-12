@@ -1,6 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { AccountModel, AddAccount, AddAccountModel, Authentication, AuthenticationModel } from '~/domain'
-import { EmailInUseError, MissingParamError, ServerError, badRequest, ok, serverError, forbidden } from '~/presentation'
+import {
+  EmailInUseError,
+  MissingParamError,
+  ServerError,
+  badRequest,
+  ok,
+  serverError,
+  forbidden
+} from '~/presentation'
 import type { Validation, HttpRequest } from '~/presentation'
 import { SignUpController } from './signup-controller'
 

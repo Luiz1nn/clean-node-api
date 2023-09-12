@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
-import { MongoHelper } from '../helper'
-import { type Collection } from 'mongodb'
+import type { Collection } from 'mongodb'
 import { LogMongoRepository } from './log-mongo-repository'
+import { MongoHelper } from '../helper'
 
 const makeSut = (): LogMongoRepository => (new LogMongoRepository())
 
