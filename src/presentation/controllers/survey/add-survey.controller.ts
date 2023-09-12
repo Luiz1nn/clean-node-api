@@ -1,10 +1,13 @@
-import type { Controller, HttpRequest, HttpResponse, Validation } from '~/presentation'
+import { badRequest, type Controller, type HttpRequest, type HttpResponse, type Validation } from '~/presentation'
 
 export class AddSurveyController implements Controller {
   constructor (private readonly validation: Validation) {}
 
   async handle ({ body }: HttpRequest): Promise<HttpResponse> {
-    this.validation.validate(body)
+    const error = this.validation.validate(body)
+    if (error) {
+      return badRequest(error)
+    }
     return await new Promise(resolve => resolve(null))
   }
 }
