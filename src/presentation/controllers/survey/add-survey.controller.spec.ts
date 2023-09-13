@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { AddSurveyModel, AddSurvey } from '~/domain'
-import { badRequest, type HttpRequest, type Validation } from '~/presentation'
+import { badRequest, serverError, type HttpRequest, type Validation } from '~/presentation'
 import { AddSurveyController } from './add-survey.controller'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -70,5 +70,12 @@ describe('AddSurvey Controller', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  it('should return 500 if AddSurvey throws', async () => {
+    const { sut, addSurveyStub } = makeSut()
+    vi.spyOn(addSurveyStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
