@@ -1,5 +1,5 @@
 import type { AddSurvey } from '~/domain'
-import { badRequest, serverError } from '~/presentation'
+import { badRequest, noContent, serverError } from '~/presentation'
 import type { Controller, HttpRequest, HttpResponse, Validation } from '~/presentation'
 
 export class AddSurveyController implements Controller {
@@ -17,7 +17,8 @@ export class AddSurveyController implements Controller {
 
       const { question, answers } = body
       await this.addSurvey.add({ question, answers })
-      return null
+
+      return noContent()
     } catch (error) {
       return serverError(error)
     }
