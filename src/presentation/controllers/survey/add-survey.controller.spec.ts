@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { AddSurveyModel, AddSurvey } from '~/domain'
-import { badRequest, serverError, type HttpRequest, type Validation } from '~/presentation'
+import { badRequest, serverError, type HttpRequest, type Validation, noContent } from '~/presentation'
 import { AddSurveyController } from './add-survey.controller'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -77,5 +77,11 @@ describe('AddSurvey Controller', () => {
     vi.spyOn(addSurveyStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  it('should return 204 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })
