@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import type { AccountModel, LoadAccountByToken } from '~/domain'
 import { AuthMiddleware } from './auth-middleware'
 import { AccessDeniedError } from '../errors'
-import { forbidden } from '../helpers'
+import { forbidden, ok } from '../helpers'
 import type { HttpRequest } from '../protocols'
 
 const makeLoadAccountByToken = (): LoadAccountByToken => {
@@ -58,7 +58,13 @@ describe('Auth Middleware', () => {
   it('should return 403 if LoadAccountByToken returns null', async () => {
     const { sut, loadAccountByTokenStub } = makeSut()
     vi.spyOn(loadAccountByTokenStub, 'load').mockReturnValueOnce(new Promise(resolve => resolve(null)))
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
+  })
+
+  it('should return 200 if LoadAccountByToken returns an account', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(ok({ accountId: 'valid_id' }))
   })
 })
