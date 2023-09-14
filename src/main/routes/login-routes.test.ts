@@ -24,7 +24,7 @@ describe('Login Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  describe('POST / signup', () => {
+  describe('POST /signup', () => {
     it('should return 200 on signup', async () => {
       await request(app)
         .post('/api/signup')
@@ -38,7 +38,7 @@ describe('Login Routes', () => {
     })
   })
 
-  describe('POST / login', () => {
+  describe('POST /login', () => {
     it('should return 200 on login', async () => {
       const password = await hash('123', 12)
       await accountCollection.insertOne({

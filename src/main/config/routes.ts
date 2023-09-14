@@ -1,8 +1,9 @@
 import { Router, type Express } from 'express'
-import { loginRoutes } from '../routes'
+import { loginRoutes, surveyRoutes } from '../routes'
 
 export default (app: Express): void => {
   const router = Router()
   app.use('/api', router)
   loginRoutes(router)
+  surveyRoutes(router)
 }
