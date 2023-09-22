@@ -1,11 +1,11 @@
 import type { LoadSurveys } from '~/domain'
-import type { Controller, HttpRequest, HttpResponse } from '~/presentation'
+import { ok, type Controller, type HttpRequest, type HttpResponse } from '~/presentation'
 
 export class LoadSurveysController implements Controller {
   constructor (private readonly loadSurveys: LoadSurveys) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    await this.loadSurveys.load()
-    return null
+    const surveys = await this.loadSurveys.load()
+    return ok(surveys)
   }
 }
