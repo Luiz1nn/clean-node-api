@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
 import type { LoadSurveys, SurveyModel } from '~/domain'
 import { LoadSurveysController } from './load-surveys-controller'
+import { ok } from '~/presentation'
 
 const makeFakeSurveys = (): SurveyModel[] => ([
   {
@@ -61,5 +62,11 @@ describe('LoadSurveys Controller', () => {
     const loadSpy = vi.spyOn(loadSurveysStub, 'load')
     await sut.handle({})
     expect(loadSpy).toHaveBeenCalled()
+  })
+
+  it('should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(ok(makeFakeSurveys()))
   })
 })
