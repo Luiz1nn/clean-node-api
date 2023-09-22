@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import MockDate from 'mockdate'
 import type { AddSurveyModel, AddSurvey } from '~/domain'
 import { badRequest, serverError, type HttpRequest, type Validation, noContent } from '~/presentation'
 import { AddSurveyController } from './add-survey.controller'
@@ -9,7 +10,8 @@ const makeFakeRequest = (): HttpRequest => ({
     answers: [{
       image: 'any_image',
       answer: 'any_answer'
-    }]
+    }],
+    date: new Date()
   }
 })
 
@@ -49,6 +51,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('AddSurvey Controller', () => {
+  afterAll(() => {
+    MockDate.set(new Date())
+  })
+
+  beforeAll(() => {
+    MockDate.reset()
+  })
+
   it('should call Validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = vi.spyOn(validationStub, 'validate')

@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import MockDate from 'mockdate'
 import type { AddSurveyRepository } from '~/data'
 import type { AddSurveyModel } from '~/domain'
 import { DbAddSurvey } from './db-add-survey'
@@ -8,7 +9,8 @@ const makeFakeSurveyData = (): AddSurveyModel => ({
   answers: [{
     image: 'any_image',
     answer: 'any_answer'
-  }]
+  }],
+  date: new Date()
 })
 
 const makeAddSurveyRepository = (): AddSurveyRepository => {
@@ -35,6 +37,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbAddSurvey Usecase', () => {
+  afterAll(() => {
+    MockDate.set(new Date())
+  })
+
+  beforeAll(() => {
+    MockDate.reset()
+  })
+
   it('should call AddSurveyRepository with correct values', async () => {
     const { sut, addSurveyRepositoryStub } = makeSut()
     const addSpy = vi.spyOn(addSurveyRepositoryStub, 'add')
