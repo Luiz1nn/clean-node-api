@@ -1,1 +1,1 @@
-export * from './add-survey.controller'
+export * from './add-survey-controller'

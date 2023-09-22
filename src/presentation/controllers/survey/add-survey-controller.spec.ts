@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
 import type { AddSurveyModel, AddSurvey } from '~/domain'
 import { badRequest, serverError, type HttpRequest, type Validation, noContent } from '~/presentation'
-import { AddSurveyController } from './add-survey.controller'
+import { AddSurveyController } from './add-survey-controller'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -51,11 +51,11 @@ const makeSut = (): SutTypes => {
 }
 
 describe('AddSurvey Controller', () => {
-  afterAll(() => {
+  beforeAll(() => {
     MockDate.set(new Date())
   })
 
-  beforeAll(() => {
+  afterAll(() => {
     MockDate.reset()
   })
 
