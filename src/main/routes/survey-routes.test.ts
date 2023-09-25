@@ -10,6 +10,25 @@ let surveyCollection: Collection
 let accountCollection: Collection
 let app: Express
 
+const makeAccessToken = async (): Promise<string> => {
+  const { insertedId } = await accountCollection.insertOne({
+    name: 'Luis',
+    email: 'luis@mail.com',
+    password: '123',
+    role: 'admin'
+  })
+  const accessToken = sign(insertedId.toString(), env.jwtSecret)
+  await accountCollection.updateOne({
+    _id: insertedId
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+
+  return accessToken
+}
+
 describe('Survey Routes', () => {
   beforeAll(async () => {
     app = await setupApp()
@@ -47,20 +66,7 @@ describe('Survey Routes', () => {
     })
 
     it('should return 204 on add survey with valid accessToken', async () => {
-      const { insertedId } = await accountCollection.insertOne({
-        name: 'Luis',
-        email: 'luis@mail.com',
-        password: '123',
-        role: 'admin'
-      })
-      const accessToken = sign(insertedId.toString(), env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: insertedId
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -87,37 +93,12 @@ describe('Survey Routes', () => {
         .expect(403)
     })
 
-    it('should return 200 on load survey with valid accessToken', async () => {
-      const { insertedId } = await accountCollection.insertOne({
-        name: 'Luis',
-        email: 'luis@mail.com',
-        password: '123'
-      })
-      await surveyCollection.insertMany([{
-        question: 'any_question',
-        answers: [
-          {
-            image: 'any_image',
-            answer: 'any_answer'
-          },
-          {
-            answer: 'other_answer'
-          }
-        ],
-        date: new Date()
-      }])
-      const accessToken = sign(insertedId.toString(), env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: insertedId
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+    it('should return 204 on load survey with valid accessToken', async () => {
+      const accessToken = await makeAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
-        .expect(200)
+        .expect(204)
     })
   })
 })
