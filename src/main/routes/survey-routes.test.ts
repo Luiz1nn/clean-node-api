@@ -2,9 +2,9 @@ import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest'
 import request from 'supertest'
 import type { Express } from 'express'
 import type { Collection } from 'mongodb'
+import { sign } from 'jsonwebtoken'
 import { MongoHelper } from '~/infra'
 import { env, setupApp } from '../config'
-import { sign } from 'jsonwebtoken'
 
 let surveyCollection: Collection
 let accountCollection: Collection
@@ -77,6 +77,14 @@ describe('Survey Routes', () => {
           ]
         })
         .expect(204)
+    })
+  })
+
+  describe('GET /surveys', () => {
+    it('should return 403 on load survey without accessToken', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(403)
     })
   })
 })
