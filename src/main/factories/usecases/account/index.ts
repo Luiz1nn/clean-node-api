@@ -1,3 +1,3 @@
-export * from './add-account'
-export * from './authentication'
-export * from './load-account-by-token'
+export * from './add-account/db-add-account-factory'
+export * from './authentication/db-authentication-factory'
+export * from './load-account-by-token/db-load-account-by-token-factory'

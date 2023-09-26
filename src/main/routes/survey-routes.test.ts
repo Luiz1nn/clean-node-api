@@ -3,7 +3,7 @@ import request from 'supertest'
 import type { Express } from 'express'
 import type { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
-import { MongoHelper } from '~/infra'
+import { MongoHelper } from '~/infra/db'
 import { env, setupApp } from '../config'
 
 let surveyCollection: Collection

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { Decrypter, LoadAccountByTokenRepository } from '~/data'
-import type { AccountModel } from '~/domain'
+import type { Decrypter, LoadAccountByTokenRepository } from '~/data/protocols'
+import type { AccountModel } from '~/domain/models'
 import { DbLoadAccountByToken } from './db-load-account-by-token'
 
 const makeFakeAccount = (): AccountModel => ({

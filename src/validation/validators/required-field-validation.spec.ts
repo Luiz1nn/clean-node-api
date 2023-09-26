@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { MissingParamError } from '~/presentation'
+import { MissingParamError } from '~/presentation/errors'
 import { RequiredFieldValidation } from './required-field-validation'
 
 describe('RequiredField Validation', () => {

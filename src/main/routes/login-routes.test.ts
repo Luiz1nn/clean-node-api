@@ -3,7 +3,7 @@ import request from 'supertest'
 import { hash } from 'bcrypt'
 import type { Express } from 'express'
 import type { Collection } from 'mongodb'
-import { MongoHelper } from '~/infra'
+import { MongoHelper } from '~/infra/db'
 import { setupApp } from '../config'
 
 let accountCollection: Collection

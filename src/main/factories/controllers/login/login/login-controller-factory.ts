@@ -1,5 +1,6 @@
-import { makeDbAuthentication, makeLogControllerDecorator } from '~/main'
-import { LoginController, type Controller } from '~/presentation'
+import { makeDbAuthentication, makeLogControllerDecorator } from '~/main/factories'
+import { LoginController } from '~/presentation/controllers'
+import type { Controller } from '~/presentation/protocols'
 import { makeLoginValidation } from './login-validation-factory'
 
 export const makeLoginController = (): Controller => {

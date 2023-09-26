@@ -1,2 +1,2 @@
-export * from './add-survey'
-export * from './load-surveys'
+export * from './add-survey/add-survey-controller-factory'
+export * from './load-surveys/load-surveys-controller-factory'

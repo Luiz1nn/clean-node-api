@@ -1,5 +1,6 @@
-import { makeDbLoadSurveys, makeLogControllerDecorator } from '~/main'
-import { LoadSurveysController, type Controller } from '~/presentation'
+import { makeDbLoadSurveys, makeLogControllerDecorator } from '~/main/factories'
+import { LoadSurveysController } from '~/presentation/controllers'
+import type { Controller } from '~/presentation/protocols'
 
 export const makeLoadSurveysController = (): Controller => {
   const controller = new LoadSurveysController(makeDbLoadSurveys())

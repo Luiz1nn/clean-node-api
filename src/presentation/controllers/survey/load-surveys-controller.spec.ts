@@ -1,8 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
-import type { LoadSurveys, SurveyModel } from '~/domain'
+import type { SurveyModel } from '~/domain/models'
+import type { LoadSurveys } from '~/domain/usecases'
+import { noContent, ok, serverError } from '~/presentation/helpers'
 import { LoadSurveysController } from './load-surveys-controller'
-import { noContent, ok, serverError } from '~/presentation'
 
 const makeFakeSurveys = (): SurveyModel[] => ([
   {

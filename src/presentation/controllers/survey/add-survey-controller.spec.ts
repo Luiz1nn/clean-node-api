@@ -1,7 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
-import type { AddSurveyModel, AddSurvey } from '~/domain'
-import { badRequest, serverError, type HttpRequest, type Validation, noContent } from '~/presentation'
+import type { AddSurveyModel, AddSurvey } from '~/domain/usecases'
+import { badRequest, serverError, noContent } from '~/presentation/helpers'
+import type { HttpRequest, Validation } from '~/presentation/protocols'
 import { AddSurveyController } from './add-survey-controller'
 
 const makeFakeRequest = (): HttpRequest => ({

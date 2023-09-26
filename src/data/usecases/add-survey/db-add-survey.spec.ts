@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
-import type { AddSurveyRepository } from '~/data'
-import type { AddSurveyModel } from '~/domain'
+import type { AddSurveyRepository } from '~/data/protocols'
+import type { AddSurveyModel } from '~/domain/usecases'
 import { DbAddSurvey } from './db-add-survey'
 
 const makeFakeSurveyData = (): AddSurveyModel => ({

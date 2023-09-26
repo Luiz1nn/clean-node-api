@@ -3,8 +3,8 @@ import type {
   HashComparer,
   UpdateAccessTokenRepository,
   LoadAccountByEmailRepository
-} from '~/data'
-import type { Authentication, AuthenticationModel } from '~/domain'
+} from '~/data/protocols'
+import type { Authentication, AuthenticationModel } from '~/domain/usecases'
 
 export class DbAuthentication implements Authentication {
   constructor (

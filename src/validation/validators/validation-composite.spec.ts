@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { MissingParamError, type Validation } from '~/presentation'
+import { MissingParamError } from '~/presentation/errors'
+import type { Validation } from '~/presentation/protocols'
 import { ValidationComposite } from './validation-composite'
 
 const makeValidation = (): Validation => {

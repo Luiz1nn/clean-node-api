@@ -1,15 +1,15 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { Validation } from '~/presentation'
+import type { Validation } from '~/presentation/protocols'
+import type { EmailValidator } from '~/validation/protocols'
 import {
   ValidationComposite,
   RequiredFieldValidation,
   CompareFieldsValidation,
-  EmailValidation,
-  type EmailValidator
-} from '~/validation'
+  EmailValidation
+} from '~/validation/validators'
 import { makeSignUpValidation } from './signup-validation-factory'
 
-vi.mock('~/validation')
+vi.mock('~/validation/validators')
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {

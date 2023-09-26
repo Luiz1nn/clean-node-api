@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { AccountModel, LoadAccountByToken } from '~/domain'
+import type { AccountModel } from '~/domain/models'
+import type { LoadAccountByToken } from '~/domain/usecases'
 import { AuthMiddleware } from './auth-middleware'
 import { AccessDeniedError } from '../errors'
 import { forbidden, ok, serverError } from '../helpers'

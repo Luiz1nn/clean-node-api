@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import type { Collection } from 'mongodb'
+import { MongoHelper } from '~/infra/db'
 import { SurveyMongoRepository } from './survey-mongo-repository'
-import { MongoHelper } from '../helper'
 
 let surveyCollection: Collection
 

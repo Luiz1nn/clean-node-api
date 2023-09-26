@@ -4,8 +4,9 @@ import type {
   HashComparer,
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository
-} from '~/data'
-import type { AccountModel, AuthenticationModel } from '~/domain'
+} from '~/data/protocols'
+import type { AccountModel } from '~/domain/models'
+import type { AuthenticationModel } from '~/domain/usecases'
 import { DbAuthentication } from './db-authentication'
 
 const makeFakeAccount = (): AccountModel => ({

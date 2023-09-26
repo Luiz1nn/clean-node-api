@@ -1,5 +1,6 @@
-import type { AddAccountRepository, Hasher, LoadAccountByEmailRepository } from '~/data'
-import type { AccountModel, AddAccount, AddAccountModel } from '~/domain'
+import type { AddAccountRepository, Hasher, LoadAccountByEmailRepository } from '~/data/protocols'
+import type { AccountModel } from '~/domain/models'
+import type { AddAccount, AddAccountModel } from '~/domain/usecases'
 
 export class DbAddAccount implements AddAccount {
   constructor (

@@ -1,15 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { AccountModel, AddAccount, AddAccountModel, Authentication, AuthenticationModel } from '~/domain'
-import {
-  EmailInUseError,
-  MissingParamError,
-  ServerError,
-  badRequest,
-  ok,
-  serverError,
-  forbidden
-} from '~/presentation'
-import type { Validation, HttpRequest } from '~/presentation'
+import type { AccountModel } from '~/domain/models'
+import type {
+  AddAccount,
+  AddAccountModel,
+  Authentication,
+  AuthenticationModel
+} from '~/domain/usecases'
+import { badRequest, ok, serverError, forbidden } from '~/presentation/helpers'
+import { EmailInUseError, MissingParamError, ServerError } from '~/presentation/errors'
+import type { Validation, HttpRequest } from '~/presentation/protocols'
 import { SignUpController } from './signup-controller'
 
 const makeAddAccount = (): AddAccount => {

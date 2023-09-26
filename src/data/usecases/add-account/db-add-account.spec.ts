@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { AddAccountRepository, Hasher, LoadAccountByEmailRepository } from '~/data'
-import type { AccountModel, AddAccountModel } from '~/domain'
+import type { AddAccountRepository, Hasher, LoadAccountByEmailRepository } from '~/data/protocols'
+import type { AccountModel } from '~/domain/models'
+import type { AddAccountModel } from '~/domain/usecases'
 import { DbAddAccount } from './db-add-account'
 
 const makeHasher = (): Hasher => {

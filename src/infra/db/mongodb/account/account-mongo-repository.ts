@@ -4,9 +4,10 @@ import type {
   LoadAccountByEmailRepository,
   LoadAccountByTokenRepository,
   UpdateAccessTokenRepository
-} from '~/data'
-import type { AddAccountModel, AccountModel } from '~/domain'
-import { MongoHelper } from '../helper'
+} from '~/data/protocols'
+import type { AccountModel } from '~/domain/models'
+import type { AddAccountModel } from '~/domain/usecases'
+import { MongoHelper } from '~/infra/db'
 
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
   async add (accountData: AddAccountModel): Promise<AccountModel> {
