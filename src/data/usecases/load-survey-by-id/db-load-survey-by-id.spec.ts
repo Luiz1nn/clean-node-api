@@ -37,7 +37,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('DbLoadSurveyById', () => {
+describe('DbLoadSurveyById Usecase', () => {
   beforeAll(() => {
     MockDate.set(new Date())
   })
