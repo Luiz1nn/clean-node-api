@@ -1,9 +1,10 @@
-import type { AddSurveyRepository, LoadSurveysRepository } from '~/data/protocols'
+import { ObjectId } from 'mongodb'
+import type { AddSurveyRepository, LoadSurveyByIdRepository, LoadSurveysRepository } from '~/data/protocols'
 import type { SurveyModel } from '~/domain/models'
 import type { AddSurveyModel } from '~/domain/usecases'
 import { MongoHelper } from '~/infra/db'
 
-export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository {
+export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository {
   async add (surveyData: AddSurveyModel): Promise<void> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     await surveyCollection.insertOne(surveyData)
@@ -13,5 +14,11 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const surveys = await surveyCollection.find().toArray()
     return MongoHelper.mapCollection(surveys)
+  }
+
+  async loadById (id: string): Promise<SurveyModel> {
+    const surveyCollection = await MongoHelper.getCollection('surveys')
+    const survey = await surveyCollection.findOne({ _id: ObjectId.createFromHexString(id) })
+    return survey && MongoHelper.map({ ...survey, _id: survey._id })
   }
 }
