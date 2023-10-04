@@ -70,7 +70,7 @@ describe('Account Mongo Repository', () => {
         email: 'any_email@mail.com',
         password: 'any_password'
       })
-      await sut.updateAccessToken(insertedId.toString(), 'any_token')
+      await sut.updateAccessToken(insertedId.toHexString(), 'any_token')
       const account = await accountCollection.findOne({ _id: insertedId }) as any
       expect(account).toBeTruthy()
       expect(account.accessToken).toBe('any_token')

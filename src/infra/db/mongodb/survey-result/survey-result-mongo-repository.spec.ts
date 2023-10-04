@@ -33,7 +33,7 @@ const mockAccountId = async (): Promise<string> => {
     email: 'any_email@mail',
     password: 'any_password'
   })
-  return insertedId.toString()
+  return insertedId.toHexString()
 }
 
 const makeSut = (): SurveyResultMongoRepository => new SurveyResultMongoRepository()
@@ -89,7 +89,7 @@ describe('Survey Result Mongo Repository', () => {
         date: new Date()
       })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toEqual(insertedId.toString())
+      expect(surveyResult.id).toEqual(insertedId.toHexString())
       expect(surveyResult.answer).toBe(survey.answers[1].answer)
     })
   })
