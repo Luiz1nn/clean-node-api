@@ -24,7 +24,7 @@ const mockSurvey = async (): Promise<SurveyModel> => {
     date: new Date()
   })
   const survey = await surveyCollection.findOne({ _id: insertedId })
-  return MongoHelper.map({ ...survey, _id: insertedId })
+  return MongoHelper.map(survey)
 }
 
 const mockAccountId = async (): Promise<string> => {
@@ -33,7 +33,7 @@ const mockAccountId = async (): Promise<string> => {
     email: 'any_email@mail',
     password: 'any_password'
   })
-  return insertedId.toHexString()
+  return insertedId.toString()
 }
 
 const makeSut = (): SurveyResultMongoRepository => new SurveyResultMongoRepository()
@@ -70,6 +70,27 @@ describe('Survey Result Mongo Repository', () => {
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.id).toBeTruthy()
       expect(surveyResult.answer).toBe(survey.answers[0].answer)
+    })
+
+    it('should update survey result if its not new', async () => {
+      const survey = await mockSurvey()
+      const accountId = await mockAccountId()
+      const { insertedId } = await surveyResultCollection.insertOne({
+        surveyId: survey.id,
+        accountId,
+        answer: survey.answers[0].answer,
+        date: new Date()
+      })
+      const sut = makeSut()
+      const surveyResult = await sut.save({
+        surveyId: survey.id,
+        accountId,
+        answer: survey.answers[1].answer,
+        date: new Date()
+      })
+      expect(surveyResult).toBeTruthy()
+      expect(surveyResult.id).toEqual(insertedId.toString())
+      expect(surveyResult.answer).toBe(survey.answers[1].answer)
     })
   })
 })
