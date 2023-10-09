@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { LoadSurveyById } from '~/domain/usecases'
 import type { SurveyModel } from '~/domain/models'
+import { InvalidParamError } from '~/presentation/errors'
+import { forbidden } from '~/presentation/helpers'
 import type { HttpRequest } from '~/presentation/protocols'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 
@@ -49,5 +51,12 @@ describe('SaveSurveyResult Controller', () => {
     const loadByIdSpy = vi.spyOn(loadSurveyByIdStub, 'loadById')
     await sut.handle(makeFakeRequest())
     expect(loadByIdSpy).toHaveBeenCalledWith('any_survey_id')
+  })
+
+  it('should return 403 if LoadSurveyById returns null', async () => {
+    const { sut, loadSurveyByIdStub } = makeSut()
+    vi.spyOn(loadSurveyByIdStub, 'loadById').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(forbidden(new InvalidParamError('surveyId')))
   })
 })
