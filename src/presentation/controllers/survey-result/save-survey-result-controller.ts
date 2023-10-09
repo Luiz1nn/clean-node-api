@@ -6,10 +6,15 @@ import type { Controller, HttpRequest, HttpResponse } from '~/presentation/proto
 export class SaveSurveyResultController implements Controller {
   constructor (private readonly loadSurveyById: LoadSurveyById) {}
 
-  async handle ({ params }: HttpRequest): Promise<HttpResponse> {
+  async handle ({ params, body }: HttpRequest): Promise<HttpResponse> {
     try {
       const survey = await this.loadSurveyById.loadById(params.surveyId)
-      if (!survey) {
+      if (survey) {
+        const answers = survey.answers.map(a => a.answer)
+        if (!answers.includes(body.answer)) {
+          return forbidden(new InvalidParamError('answer'))
+        }
+      } else {
         return forbidden(new InvalidParamError('surveyId'))
       }
 
