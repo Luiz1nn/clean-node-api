@@ -3,7 +3,7 @@ import MockDate from 'mockdate'
 import type { LoadSurveyById, SaveSurveyResult, SaveSurveyResultModel } from '~/domain/usecases'
 import type { SurveyModel, SurveyResultModel } from '~/domain/models'
 import { InvalidParamError } from '~/presentation/errors'
-import { forbidden, serverError } from '~/presentation/helpers'
+import { forbidden, ok, serverError } from '~/presentation/helpers'
 import type { HttpRequest } from '~/presentation/protocols'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 
@@ -130,5 +130,11 @@ describe('SaveSurveyResult Controller', () => {
     vi.spyOn(saveSurveyResultStub, 'save').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  it('should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(ok(makeFakeSurveyResult()))
   })
 })
