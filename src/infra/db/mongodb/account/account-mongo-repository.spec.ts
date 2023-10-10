@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import type { Collection } from 'mongodb'
+import { mockAddAccountParams } from '~/domain/test'
 import { MongoHelper } from '~/infra/db'
 import { AccountMongoRepository } from './account-mongo-repository'
 
@@ -26,11 +27,7 @@ describe('Account Mongo Repository', () => {
   describe('add()', () => {
     it('should return an account on add success', async () => {
       const sut = makeSut()
-      const account = await sut.add({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      const account = await sut.add(mockAddAccountParams())
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
@@ -42,11 +39,7 @@ describe('Account Mongo Repository', () => {
   describe('loadByEmail()', () => {
     it('should return an account on loadByEmail success', async () => {
       const sut = makeSut()
-      await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      await accountCollection.insertOne(mockAddAccountParams())
       const account = await sut.loadByEmail('any_email@mail.com')
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
@@ -65,11 +58,7 @@ describe('Account Mongo Repository', () => {
   describe('updateAccessToken()', () => {
     it('should update the account accessToken on updateAccessToken success', async () => {
       const sut = makeSut()
-      const { insertedId } = await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      const { insertedId } = await accountCollection.insertOne(mockAddAccountParams())
       await sut.updateAccessToken(insertedId.toHexString(), 'any_token')
       const account = await accountCollection.findOne({ _id: insertedId }) as any
       expect(account).toBeTruthy()

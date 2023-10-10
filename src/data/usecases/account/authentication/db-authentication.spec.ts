@@ -5,57 +5,15 @@ import type {
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository
 } from '~/data/protocols'
+import {
+  mockEncrypter,
+  mockHashComparer,
+  mockLoadAccountByEmailRepository,
+  mockUpdateAccessTokenRepositoryStub
+} from '~/data/test'
 import type { AccountModel } from '~/domain/models'
-import type { AuthenticationParams } from '~/domain/usecases'
+import { mockAuthentication, throwError } from '~/domain/test'
 import { DbAuthentication } from './db-authentication'
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'any_id',
-  name: 'any_name',
-  email: 'any_email@mail.com',
-  password: 'hashed_password'
-})
-
-const makeFakeAuthentication = (): AuthenticationParams => ({
-  email: 'any_email@mail.com',
-  password: 'any_password'
-})
-
-const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AccountModel> {
-      return await new Promise(resolve => resolve(makeFakeAccount()))
-    }
-  }
-  return new LoadAccountByEmailRepositoryStub()
-}
-
-const makeHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return true
-    }
-  }
-  return new HashComparerStub()
-}
-
-const makeEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
-      return await new Promise(resolve => resolve('any_token'))
-    }
-  }
-  return new EncrypterStub()
-}
-
-const makeUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenRepository => {
-  class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async updateAccessToken (id: string, token: string): Promise<void> {
-      return await new Promise(resolve => resolve())
-    }
-  }
-  return new UpdateAccessTokenRepositoryStub()
-}
 
 type SutTypes = {
   sut: DbAuthentication
@@ -66,10 +24,10 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
-  const hashComparerStub = makeHashComparer()
-  const encrypterStub = makeEncrypter()
-  const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepositoryStub()
+  const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
+  const hashComparerStub = mockHashComparer()
+  const encrypterStub = mockEncrypter()
+  const updateAccessTokenRepositoryStub = mockUpdateAccessTokenRepositoryStub()
   const sut = new DbAuthentication(
     loadAccountByEmailRepositoryStub,
     hashComparerStub,
@@ -90,14 +48,14 @@ describe('DbAuthentication UseCase', () => {
   it('should call LoadAccountByEmailRepository with correct email', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
     const loadSpy = vi.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
-    await sut.auth(makeFakeAuthentication())
+    await sut.auth(mockAuthentication())
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
   it('should throw if LoadAccountByEmailRepository throws', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-    vi.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const promise = sut.auth(makeFakeAuthentication())
+    vi.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockImplementationOnce(throwError)
+    const promise = sut.auth(mockAuthentication())
     await expect(promise).rejects.toThrow()
   })
 
@@ -105,62 +63,62 @@ describe('DbAuthentication UseCase', () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
     vi.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve) => resolve(null as unknown as AccountModel))
     )
-    const accessToken = await sut.auth(makeFakeAuthentication())
+    const accessToken = await sut.auth(mockAuthentication())
     expect(accessToken).toBeNull()
   })
 
   it('should call HashComparer with correct values', async () => {
     const { sut, hashComparerStub } = makeSut()
     const compareSpy = vi.spyOn(hashComparerStub, 'compare')
-    await sut.auth(makeFakeAuthentication())
-    expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
+    await sut.auth(mockAuthentication())
+    expect(compareSpy).toHaveBeenCalledWith('any_password', 'any_password')
   })
 
   it('should throw if HashComparer throws', async () => {
     const { sut, hashComparerStub } = makeSut()
-    vi.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const promise = sut.auth(makeFakeAuthentication())
+    vi.spyOn(hashComparerStub, 'compare').mockImplementationOnce(throwError)
+    const promise = sut.auth(mockAuthentication())
     await expect(promise).rejects.toThrow()
   })
 
   it('should return null if HashComparer returns false', async () => {
     const { sut, hashComparerStub } = makeSut()
     vi.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(new Promise(resolve => resolve(false)))
-    const accessToken = await sut.auth(makeFakeAuthentication())
+    const accessToken = await sut.auth(mockAuthentication())
     expect(accessToken).toBeNull()
   })
 
   it('should call Encrypter with correct id', async () => {
     const { sut, encrypterStub } = makeSut()
     const encryptSpy = vi.spyOn(encrypterStub, 'encrypt')
-    await sut.auth(makeFakeAuthentication())
+    await sut.auth(mockAuthentication())
     expect(encryptSpy).toHaveBeenCalledWith('any_id')
   })
 
   it('should throw if Encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
-    vi.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const promise = sut.auth(makeFakeAuthentication())
+    vi.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(throwError)
+    const promise = sut.auth(mockAuthentication())
     await expect(promise).rejects.toThrow()
   })
 
   it('should return a token on success', async () => {
     const { sut } = makeSut()
-    const accessToken = await sut.auth(makeFakeAuthentication())
+    const accessToken = await sut.auth(mockAuthentication())
     expect(accessToken).toBe('any_token')
   })
 
   it('should call UpdateAccessTokenRepository with correct values', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
     const updateSpy = vi.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
-    await sut.auth(makeFakeAuthentication())
+    await sut.auth(mockAuthentication())
     expect(updateSpy).toHaveBeenCalledWith('any_id', 'any_token')
   })
 
   it('should throw if UpdateAccessTokenRepository throws', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
-    vi.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const promise = sut.auth(makeFakeAuthentication())
+    vi.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockImplementationOnce(throwError)
+    const promise = sut.auth(mockAuthentication())
     await expect(promise).rejects.toThrow()
   })
 })
