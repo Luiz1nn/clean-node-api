@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from 'vitest'
 import type { AccountModel } from '~/domain/models'
 import type {
   AddAccount,
-  AddAccountModel,
+  AddAccountParams,
   Authentication,
-  AuthenticationModel
+  AuthenticationParams
 } from '~/domain/usecases'
 import { badRequest, ok, serverError, forbidden } from '~/presentation/helpers'
 import { EmailInUseError, MissingParamError, ServerError } from '~/presentation/errors'
@@ -13,7 +13,7 @@ import { SignUpController } from './signup-controller'
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
       return await new Promise((resolve) => { resolve(makeFakeAccount()) })
     }
   }
@@ -23,7 +23,7 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string | null> {
+    async auth (authentication: AuthenticationParams): Promise<string | null> {
       return await new Promise(resolve => resolve('any_token'))
     }
   }

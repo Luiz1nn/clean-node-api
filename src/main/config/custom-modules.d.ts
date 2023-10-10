@@ -3,3 +3,5 @@ declare module Express {
     accountId?: string
   }
 }
+
+declare var __MONGO_URI__: string

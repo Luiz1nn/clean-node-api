@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { AuthenticationModel, Authentication } from '~/domain/usecases'
+import type { AuthenticationParams, Authentication } from '~/domain/usecases'
 import { MissingParamError } from '~/presentation/errors'
 import { badRequest, ok, serverError, unauthorized } from '~/presentation/helpers'
 import type { Validation, HttpRequest } from '~/presentation/protocols'
@@ -7,7 +7,7 @@ import { LoginController } from './login-controller'
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string | null> {
+    async auth (authentication: AuthenticationParams): Promise<string | null> {
       return await new Promise(resolve => resolve('any_token'))
     }
   }
