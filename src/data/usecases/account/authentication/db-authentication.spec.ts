@@ -11,7 +11,6 @@ import {
   mockLoadAccountByEmailRepository,
   mockUpdateAccessTokenRepositoryStub
 } from '~/data/test'
-import type { AccountModel } from '~/domain/models'
 import { mockAuthentication, throwError } from '~/domain/test'
 import { DbAuthentication } from './db-authentication'
 
@@ -61,8 +60,7 @@ describe('DbAuthentication UseCase', () => {
 
   it('should return null if LoadAccountByEmailRepository returns null', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-    vi.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve) => resolve(null as unknown as AccountModel))
-    )
+    vi.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null))
     const accessToken = await sut.auth(mockAuthentication())
     expect(accessToken).toBeNull()
   })
@@ -83,7 +81,7 @@ describe('DbAuthentication UseCase', () => {
 
   it('should return null if HashComparer returns false', async () => {
     const { sut, hashComparerStub } = makeSut()
-    vi.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(new Promise(resolve => resolve(false)))
+    vi.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(Promise.resolve(false))
     const accessToken = await sut.auth(mockAuthentication())
     expect(accessToken).toBeNull()
   })
