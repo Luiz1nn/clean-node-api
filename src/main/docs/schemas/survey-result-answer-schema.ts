@@ -6,7 +6,13 @@ export const surveyResultAnswerSchema = {
     },
     answer: {
       type: 'string'
+    },
+    count: {
+      type: 'number'
+    },
+    percent: {
+      type: 'number'
     }
   },
-  required: ['image', 'answer']
+  required: ['answer', 'count', 'percent']
 }
