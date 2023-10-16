@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
-import type { Collection } from 'mongodb'
+import { ObjectId, type Collection } from 'mongodb'
 import type { SurveyModel } from '~/domain/models'
 import { MongoHelper } from '~/infra/db'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
@@ -68,16 +68,18 @@ describe('Survey Result Mongo Repository', () => {
         date: new Date()
       })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBeTruthy()
-      expect(surveyResult.answer).toBe(survey.answers[0].answer)
+      expect(surveyResult.surveyId).toEqual(new ObjectId(survey.id))
+      expect(surveyResult.answers[0].answer).toBe(survey.answers[0].answer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
     })
 
     it('should update survey result if its not new', async () => {
       const survey = await mockSurvey()
       const accountId = await mockAccountId()
-      const { insertedId } = await surveyResultCollection.insertOne({
-        surveyId: survey.id,
-        accountId,
+      await surveyResultCollection.insertOne({
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(accountId),
         answer: survey.answers[0].answer,
         date: new Date()
       })
@@ -89,8 +91,10 @@ describe('Survey Result Mongo Repository', () => {
         date: new Date()
       })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toEqual(insertedId.toHexString())
-      expect(surveyResult.answer).toBe(survey.answers[1].answer)
+      expect(surveyResult.surveyId).toEqual(new ObjectId(survey.id))
+      expect(surveyResult.answers[0].answer).toBe(survey.answers[1].answer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
     })
   })
 })

@@ -45,7 +45,7 @@ describe('DbSaveSurveyResult Usecase', () => {
 
   it('should return SurveyResult on success', async () => {
     const { sut } = makeSut()
-    const surveyResult = await sut.save(mockSurveyResultModel())
+    const surveyResult = await sut.save(mockSaveSurveyResultParams())
     expect(surveyResult).toEqual(mockSurveyResultModel())
   })
 })
