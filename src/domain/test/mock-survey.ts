@@ -3,10 +3,15 @@ import type { AddSurveyParams } from '../usecases'
 
 export const mockAddSurveyParams = (): AddSurveyParams => ({
   question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer'
-  }],
+  answers: [
+    {
+      answer: 'any_answer'
+    },
+    {
+      answer: 'other_answer',
+      image: 'any_image'
+    }
+  ],
   date: new Date()
 })
 
