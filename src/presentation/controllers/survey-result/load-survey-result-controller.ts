@@ -1,15 +1,24 @@
-import type { LoadSurveyById } from '~/domain/usecases'
+import type { LoadSurveyById, LoadSurveyResult } from '~/domain/usecases'
 import { InvalidParamError } from '~/presentation/errors'
 import { forbidden, serverError } from '~/presentation/helpers'
 import type { Controller, HttpRequest, HttpResponse } from '~/presentation/protocols'
 
 export class LoadSurveyResultController implements Controller {
-  constructor (private readonly loadSurveyById: LoadSurveyById) {}
+  constructor (
+    private readonly loadSurveyById: LoadSurveyById,
+    private readonly loadSurveyResult: LoadSurveyResult
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      await this.loadSurveyById.loadById(httpRequest.params.surveyId)
-      return forbidden(new InvalidParamError('surveyId'))
+      const { surveyId } = httpRequest.params
+
+      const survey = await this.loadSurveyById.loadById(surveyId)
+      if (!survey) {
+        return forbidden(new InvalidParamError('surveyId'))
+      }
+
+      await this.loadSurveyResult.load(surveyId)
     } catch (error) {
       return serverError(error)
     }
