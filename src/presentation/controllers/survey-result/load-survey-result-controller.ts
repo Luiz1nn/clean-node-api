@@ -1,4 +1,6 @@
 import type { LoadSurveyById } from '~/domain/usecases'
+import { InvalidParamError } from '~/presentation/errors'
+import { forbidden } from '~/presentation/helpers'
 import type { Controller, HttpRequest, HttpResponse } from '~/presentation/protocols'
 
 export class LoadSurveyResultController implements Controller {
@@ -6,6 +8,6 @@ export class LoadSurveyResultController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     await this.loadSurveyById.loadById(httpRequest.params.surveyId)
-    return null
+    return forbidden(new InvalidParamError('surveyId'))
   }
 }
