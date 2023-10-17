@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { LoadSurveyResultRepository } from '~/data/protocols'
 import { mockLoadSurveyResultRepository } from '~/data/test'
-import { throwError } from '~/domain/test'
+import { mockSurveyResultModel, throwError } from '~/domain/test'
 import { DbLoadSurveyResult } from './db-load-survey-result'
 
 type SutTypes = {
@@ -31,5 +31,11 @@ describe('DbLoadSurveyResult Usecase', () => {
     vi.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId').mockImplementationOnce(throwError)
     const promise = sut.load('any_survey_id')
     await expect(promise).rejects.toThrow()
+  })
+
+  it('should return surveyResultModel on success', async () => {
+    const { sut } = makeSut()
+    const surveyResult = await sut.load('any_survey_id')
+    expect(surveyResult).toEqual(mockSurveyResultModel())
   })
 })
