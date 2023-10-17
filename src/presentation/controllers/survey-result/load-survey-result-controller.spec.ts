@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { LoadSurveyById, LoadSurveyResult } from '~/domain/usecases'
 import { InvalidParamError } from '~/presentation/errors'
-import { forbidden, serverError } from '~/presentation/helpers'
+import { forbidden, ok, serverError } from '~/presentation/helpers'
 import type { HttpRequest } from '~/presentation/protocols'
 import { mockLoadSurveyById, mockLoadSurveyResult } from '~/presentation/test'
 import { LoadSurveyResultController } from './load-survey-result-controller'
-import { throwError } from '~/domain/test'
+import { mockSurveyResultModel, throwError } from '~/domain/test'
 
 const mockRequest = (): HttpRequest => ({
   params: {
@@ -64,5 +64,11 @@ describe('LoadSurveyResult Controller', () => {
     vi.spyOn(loadSurveyResultStub, 'load').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  it('should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok(mockSurveyResultModel()))
   })
 })
