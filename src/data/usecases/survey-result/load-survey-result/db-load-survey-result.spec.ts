@@ -1,20 +1,23 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { LoadSurveyResultRepository } from '~/data/protocols'
-import { mockLoadSurveyResultRepository } from '~/data/test'
+import type { LoadSurveyByIdRepository, LoadSurveyResultRepository } from '~/data/protocols'
+import { mockLoadSurveyByIdRepository, mockLoadSurveyResultRepository } from '~/data/test'
 import { mockSurveyResultModel, throwError } from '~/domain/test'
 import { DbLoadSurveyResult } from './db-load-survey-result'
 
 type SutTypes = {
   sut: DbLoadSurveyResult
   loadSurveyResultRepositoryStub: LoadSurveyResultRepository
+  loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
 }
 
 const makeSut = (): SutTypes => {
   const loadSurveyResultRepositoryStub = mockLoadSurveyResultRepository()
-  const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub)
+  const loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepository()
+  const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub, loadSurveyByIdRepositoryStub)
   return {
     sut,
-    loadSurveyResultRepositoryStub
+    loadSurveyResultRepositoryStub,
+    loadSurveyByIdRepositoryStub
   }
 }
 
@@ -31,6 +34,14 @@ describe('DbLoadSurveyResult Usecase', () => {
     vi.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId').mockImplementationOnce(throwError)
     const promise = sut.load('any_survey_id')
     await expect(promise).rejects.toThrow()
+  })
+
+  it('should call LoadSurveyByIdRepository if LoadSurveyResultRepository returns null', async () => {
+    const { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositoryStub } = makeSut()
+    const loadByIdSpy = vi.spyOn(loadSurveyByIdRepositoryStub, 'loadById')
+    vi.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId').mockReturnValueOnce(Promise.resolve(null))
+    await sut.load('any_survey_id')
+    expect(loadByIdSpy).toHaveBeenCalledWith('any_survey_id')
   })
 
   it('should return surveyResultModel on success', async () => {
