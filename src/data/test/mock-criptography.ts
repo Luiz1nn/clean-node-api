@@ -1,12 +1,14 @@
+import { faker } from '@faker-js/faker'
 import type { Decrypter, Encrypter, HashComparer, Hasher } from '../protocols'
 
-export const mockDecrypter = (): Decrypter => {
-  class DecrypterStub implements Decrypter {
-    async decrypt (value: string): Promise<string> {
-      return await Promise.resolve('any_value')
-    }
+export class DecrypterSpy implements Decrypter {
+  plaintext = faker.internet.password()
+  ciphertext: string
+
+  async decrypt (ciphertext: string): Promise<string> {
+    this.ciphertext = ciphertext
+    return this.plaintext
   }
-  return new DecrypterStub()
 }
 
 export const mockEncrypter = (): Encrypter => {
