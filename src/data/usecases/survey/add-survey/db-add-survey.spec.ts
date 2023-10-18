@@ -1,21 +1,20 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
-import type { AddSurveyRepository } from '~/data/protocols'
-import { mockAddSurveyRepository } from '~/data/test'
+import { AddSurveyRepositorySpy } from '~/data/test'
 import { mockAddSurveyParams, throwError } from '~/domain/test'
 import { DbAddSurvey } from './db-add-survey'
 
 type SutTypes = {
   sut: DbAddSurvey
-  addSurveyRepositoryStub: AddSurveyRepository
+  addSurveyRepositorySpy: AddSurveyRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
-  const addSurveyRepositoryStub = mockAddSurveyRepository()
-  const sut = new DbAddSurvey(addSurveyRepositoryStub)
+  const addSurveyRepositorySpy = new AddSurveyRepositorySpy()
+  const sut = new DbAddSurvey(addSurveyRepositorySpy)
   return {
     sut,
-    addSurveyRepositoryStub
+    addSurveyRepositorySpy
   }
 }
 
@@ -29,16 +28,15 @@ describe('DbAddSurvey Usecase', () => {
   })
 
   it('should call AddSurveyRepository with correct values', async () => {
-    const { sut, addSurveyRepositoryStub } = makeSut()
-    const addSpy = vi.spyOn(addSurveyRepositoryStub, 'add')
+    const { sut, addSurveyRepositorySpy } = makeSut()
     const surveyData = mockAddSurveyParams()
     await sut.add(surveyData)
-    expect(addSpy).toHaveBeenCalledWith(surveyData)
+    expect(addSurveyRepositorySpy.params).toEqual(surveyData)
   })
 
   it('should throw if AddSurveyRepository throws', async () => {
-    const { sut, addSurveyRepositoryStub } = makeSut()
-    vi.spyOn(addSurveyRepositoryStub, 'add').mockImplementationOnce(throwError)
+    const { sut, addSurveyRepositorySpy } = makeSut()
+    vi.spyOn(addSurveyRepositorySpy, 'add').mockImplementationOnce(throwError)
     const promise = sut.add(mockAddSurveyParams())
     await expect(promise).rejects.toThrow()
   })
