@@ -11,13 +11,13 @@ export class DecrypterSpy implements Decrypter {
   }
 }
 
-export const mockEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
-      return await Promise.resolve('any_token')
-    }
+export class EncrypterSpy implements Encrypter {
+  ciphertext = faker.string.uuid()
+  plaintext: string
+  async encrypt (plaintext: string): Promise<string> {
+    this.plaintext = plaintext
+    return this.ciphertext
   }
-  return new EncrypterStub()
 }
 
 export const mockHashComparer = (): HashComparer => {
