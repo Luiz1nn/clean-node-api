@@ -32,11 +32,12 @@ export class HashComparerSpy implements HashComparer {
   }
 }
 
-export const mockHasher = (): Hasher => {
-  class HasherStub implements Hasher {
-    async hash (value: string): Promise<string> {
-      return await Promise.resolve('any_password')
-    }
+export class HasherSpy implements Hasher {
+  digest = faker.string.uuid()
+  plaintext: string
+
+  async hash (plaintext: string): Promise<string> {
+    this.plaintext = plaintext
+    return this.digest
   }
-  return new HasherStub()
 }
