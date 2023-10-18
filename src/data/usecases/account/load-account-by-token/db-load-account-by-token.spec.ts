@@ -30,7 +30,7 @@ describe('DbLoadAccountByToken Usecase', () => {
     role = faker.lorem.word()
   })
 
-  it('should call Decrypter with correct value', async () => {
+  it('should call Decrypter with correct ciphertext', async () => {
     const { sut, decrypterSpy } = makeSut()
     await sut.load(token, role)
     expect(decrypterSpy.ciphertext).toBe(token)
