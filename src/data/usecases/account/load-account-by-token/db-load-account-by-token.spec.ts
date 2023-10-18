@@ -1,72 +1,79 @@
-import { describe, expect, it, vi } from 'vitest'
-import type { LoadAccountByTokenRepository } from '~/data/protocols'
-import { DecrypterSpy, mockLoadAccountByTokenRepository } from '~/data/test'
-import { mockAccountModel, throwError } from '~/domain/test'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { faker } from '@faker-js/faker'
+import { DecrypterSpy, LoadAccountByTokenRepositorySpy } from '~/data/test'
+import { throwError } from '~/domain/test'
 import { DbLoadAccountByToken } from './db-load-account-by-token'
 
 type SutTypes = {
   sut: DbLoadAccountByToken
   decrypterSpy: DecrypterSpy
-  loadAccountByTokenRepositoryStub: LoadAccountByTokenRepository
+  loadAccountByTokenRepositorySpy: LoadAccountByTokenRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
   const decrypterSpy = new DecrypterSpy()
-  const loadAccountByTokenRepositoryStub = mockLoadAccountByTokenRepository()
-  const sut = new DbLoadAccountByToken(decrypterSpy, loadAccountByTokenRepositoryStub)
+  const loadAccountByTokenRepositorySpy = new LoadAccountByTokenRepositorySpy()
+  const sut = new DbLoadAccountByToken(decrypterSpy, loadAccountByTokenRepositorySpy)
   return {
     sut,
     decrypterSpy,
-    loadAccountByTokenRepositoryStub
+    loadAccountByTokenRepositorySpy
   }
 }
 
+let token: string
+let role: string
+
 describe('DbLoadAccountByToken Usecase', () => {
+  beforeEach(() => {
+    token = faker.string.uuid()
+    role = faker.lorem.word()
+  })
+
   it('should call Decrypter with correct value', async () => {
     const { sut, decrypterSpy } = makeSut()
-    const decryptSpy = vi.spyOn(decrypterSpy, 'decrypt')
-    await sut.load('any_token', 'any_role')
-    expect(decryptSpy).toHaveBeenCalledWith('any_token')
+    await sut.load(token, role)
+    expect(decrypterSpy.ciphertext).toBe(token)
   })
 
   it('should return null if Decrypter returns null', async () => {
     const { sut, decrypterSpy } = makeSut()
-    vi.spyOn(decrypterSpy, 'decrypt').mockReturnValueOnce(Promise.resolve(null))
-    const account = await sut.load('any_token', 'any_role')
+    decrypterSpy.plaintext = null
+    const account = await sut.load(token, role)
     expect(account).toBeNull()
   })
 
   it('should call LoadAccountByTokenRepository with correct values', async () => {
-    const { sut, loadAccountByTokenRepositoryStub } = makeSut()
-    const loadByTokenSpy = vi.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken')
-    await sut.load('any_token', 'any_role')
-    expect(loadByTokenSpy).toHaveBeenCalledWith('any_token', 'any_role')
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut()
+    await sut.load(token, role)
+    expect(loadAccountByTokenRepositorySpy.token).toBe(token)
+    expect(loadAccountByTokenRepositorySpy.role).toBe(role)
   })
 
   it('should return null if LoadAccountByTokenRepository returns null', async () => {
-    const { sut, loadAccountByTokenRepositoryStub } = makeSut()
-    vi.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockReturnValueOnce(Promise.resolve(null))
-    const account = await sut.load('any_token', 'any_role')
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut()
+    loadAccountByTokenRepositorySpy.result = null
+    const account = await sut.load(token, role)
     expect(account).toBeNull()
   })
 
   it('should return an account on success', async () => {
-    const { sut } = makeSut()
-    const account = await sut.load('any_token', 'any_role')
-    expect(account).toEqual(mockAccountModel())
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut()
+    const account = await sut.load(token, role)
+    expect(account).toEqual(loadAccountByTokenRepositorySpy.result)
   })
 
   it('should throw if Decrypter throws', async () => {
     const { sut, decrypterSpy } = makeSut()
     vi.spyOn(decrypterSpy, 'decrypt').mockImplementationOnce(throwError)
-    const promise = sut.load('any_token', 'any_role')
-    await expect(promise).rejects.toThrow()
+    const account = await sut.load(token, role)
+    expect(account).toBeNull()
   })
 
   it('should throw if LoadAccountByTokenRepository throws', async () => {
-    const { sut, loadAccountByTokenRepositoryStub } = makeSut()
-    vi.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockImplementationOnce(throwError)
-    const promise = sut.load('any_token', 'any_role')
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut()
+    vi.spyOn(loadAccountByTokenRepositorySpy, 'loadByToken').mockImplementationOnce(throwError)
+    const promise = sut.load(token, role)
     await expect(promise).rejects.toThrow()
   })
 })

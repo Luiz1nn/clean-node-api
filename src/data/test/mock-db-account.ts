@@ -1,4 +1,3 @@
-import type { AccountModel } from '~/domain/models'
 import { mockAccountModel } from '~/domain/test'
 import type {
   AddAccountRepository,
@@ -33,13 +32,16 @@ export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailReposi
   }
 }
 
-export const mockLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
-  class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
-    async loadByToken (token: string, role?: string): Promise<AccountModel> {
-      return await Promise.resolve(mockAccountModel())
-    }
+export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenRepository {
+  token: string
+  role: string
+  result = mockAccountModel()
+
+  async loadByToken (token: string, role?: string): Promise<LoadAccountByEmailRepository.Result> {
+    this.token = token
+    this.role = role
+    return this.result
   }
-  return new LoadAccountByTokenRepositoryStub()
 }
 
 export const mockUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenRepository => {
