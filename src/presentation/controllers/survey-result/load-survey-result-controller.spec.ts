@@ -1,11 +1,12 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import MockDate from 'mockdate'
+import { mockSurveyResultModel, throwError } from '~/domain/test'
 import type { LoadSurveyById, LoadSurveyResult } from '~/domain/usecases'
 import { InvalidParamError } from '~/presentation/errors'
 import { forbidden, ok, serverError } from '~/presentation/helpers'
 import type { HttpRequest } from '~/presentation/protocols'
 import { mockLoadSurveyById, mockLoadSurveyResult } from '~/presentation/test'
 import { LoadSurveyResultController } from './load-survey-result-controller'
-import { mockSurveyResultModel, throwError } from '~/domain/test'
 
 const mockRequest = (): HttpRequest => ({
   params: {
@@ -31,6 +32,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('LoadSurveyResult Controller', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   it('should call LoadSurveyById with correct id', async () => {
     const { sut, loadSurveyByIdStub } = makeSut()
     const loadByIdSpy = vi.spyOn(loadSurveyByIdStub, 'loadById')
