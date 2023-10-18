@@ -6,6 +6,7 @@ import type {
   LoadAccountByTokenRepository,
   UpdateAccessTokenRepository
 } from '../protocols'
+import { faker } from '@faker-js/faker'
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   params: AddAccountRepository.Params
@@ -17,13 +18,19 @@ export class AddAccountRepositorySpy implements AddAccountRepository {
   }
 }
 
-export const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AccountModel> {
-      return await Promise.resolve(mockAccountModel())
-    }
+export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
+  email: string
+  result = {
+    id: faker.string.uuid(),
+    name: faker.person.firstName(),
+    email: '',
+    password: faker.internet.password()
   }
-  return new LoadAccountByEmailRepositoryStub()
+
+  async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
+    this.result.email = email
+    return this.result
+  }
 }
 
 export const mockLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
