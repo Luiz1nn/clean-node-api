@@ -4,7 +4,7 @@ import type {
   UpdateAccessTokenRepository,
   LoadAccountByEmailRepository
 } from '~/data/protocols'
-import type { Authentication, AuthenticationParams } from '~/domain/usecases'
+import type { Authentication } from '~/domain/usecases'
 
 export class DbAuthentication implements Authentication {
   constructor (
@@ -14,7 +14,7 @@ export class DbAuthentication implements Authentication {
     private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {}
 
-  async auth ({ email, password }: AuthenticationParams): Promise<string | null> {
+  async auth ({ email, password }: Authentication.Params): Promise<Authentication.Result> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(email)
 
     if (account) {
