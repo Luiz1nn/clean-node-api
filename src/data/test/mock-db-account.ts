@@ -27,7 +27,7 @@ export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailReposi
   }
 
   async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
-    this.result.email = email
+    this.email = email
     return this.result
   }
 }
@@ -44,11 +44,12 @@ export class LoadAccountByTokenRepositorySpy implements LoadAccountByTokenReposi
   }
 }
 
-export const mockUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenRepository => {
-  class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async updateAccessToken (id: string, token: string): Promise<void> {
-      return await Promise.resolve()
-    }
+export class UpdateAccessTokenRepositorySpy implements UpdateAccessTokenRepository {
+  id: string
+  token: string
+
+  async updateAccessToken (id: string, token: string): Promise<void> {
+    this.id = id
+    this.token = token
   }
-  return new UpdateAccessTokenRepositoryStub()
 }

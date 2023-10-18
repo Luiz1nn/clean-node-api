@@ -1,10 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { UpdateAccessTokenRepository } from '~/data/protocols'
 import {
   EncrypterSpy,
   HashComparerSpy,
   LoadAccountByEmailRepositorySpy,
-  mockUpdateAccessTokenRepositoryStub
+  UpdateAccessTokenRepositorySpy
 } from '~/data/test'
 import { mockAuthenticationParams, throwError } from '~/domain/test'
 import { DbAuthentication } from './db-authentication'
@@ -14,19 +13,19 @@ type SutTypes = {
   loadAccountByEmailRepositorySpy: LoadAccountByEmailRepositorySpy
   hashComparerSpy: HashComparerSpy
   encrypterSpy: EncrypterSpy
-  updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
+  updateAccessTokenRepositorySpy: UpdateAccessTokenRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositorySpy = new LoadAccountByEmailRepositorySpy()
   const hashComparerSpy = new HashComparerSpy()
   const encrypterSpy = new EncrypterSpy()
-  const updateAccessTokenRepositoryStub = mockUpdateAccessTokenRepositoryStub()
+  const updateAccessTokenRepositorySpy = new UpdateAccessTokenRepositorySpy()
   const sut = new DbAuthentication(
     loadAccountByEmailRepositorySpy,
     hashComparerSpy,
     encrypterSpy,
-    updateAccessTokenRepositoryStub
+    updateAccessTokenRepositorySpy
   )
 
   return {
@@ -34,17 +33,16 @@ const makeSut = (): SutTypes => {
     loadAccountByEmailRepositorySpy,
     hashComparerSpy,
     encrypterSpy,
-    updateAccessTokenRepositoryStub
+    updateAccessTokenRepositorySpy
   }
 }
 
 describe('DbAuthentication UseCase', () => {
   it('should call LoadAccountByEmailRepository with correct email', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
-    const loadSpy = vi.spyOn(loadAccountByEmailRepositorySpy, 'loadByEmail')
     const authenticationParams = mockAuthenticationParams()
     await sut.auth(authenticationParams)
-    expect(loadSpy).toHaveBeenCalledWith(authenticationParams.email)
+    expect(loadAccountByEmailRepositorySpy.email).toBe(authenticationParams.email)
   })
 
   it('should throw if LoadAccountByEmailRepository throws', async () => {
@@ -56,7 +54,7 @@ describe('DbAuthentication UseCase', () => {
 
   it('should return null if LoadAccountByEmailRepository returns null', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
-    vi.spyOn(loadAccountByEmailRepositorySpy, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null))
+    loadAccountByEmailRepositorySpy.result = null
     const accessToken = await sut.auth(mockAuthenticationParams())
     expect(accessToken).toBeNull()
   })
@@ -78,7 +76,7 @@ describe('DbAuthentication UseCase', () => {
 
   it('should return null if HashComparer returns false', async () => {
     const { sut, hashComparerSpy } = makeSut()
-    vi.spyOn(hashComparerSpy, 'compare').mockReturnValueOnce(Promise.resolve(false))
+    hashComparerSpy.isValid = false
     const accessToken = await sut.auth(mockAuthenticationParams())
     expect(accessToken).toBeNull()
   })
@@ -103,15 +101,15 @@ describe('DbAuthentication UseCase', () => {
   })
 
   it('should call UpdateAccessTokenRepository with correct values', async () => {
-    const { sut, updateAccessTokenRepositoryStub, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
-    const updateAccessTokenSpy = vi.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
+    const { sut, updateAccessTokenRepositorySpy, encrypterSpy, loadAccountByEmailRepositorySpy } = makeSut()
     await sut.auth(mockAuthenticationParams())
-    expect(updateAccessTokenSpy).toHaveBeenCalledWith(loadAccountByEmailRepositorySpy.result.id, encrypterSpy.ciphertext)
+    expect(updateAccessTokenRepositorySpy.id).toBe(loadAccountByEmailRepositorySpy.result.id)
+    expect(updateAccessTokenRepositorySpy.token).toBe(encrypterSpy.ciphertext)
   })
 
   it('should throw if UpdateAccessTokenRepository throws', async () => {
-    const { sut, updateAccessTokenRepositoryStub } = makeSut()
-    vi.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockImplementationOnce(throwError)
+    const { sut, updateAccessTokenRepositorySpy } = makeSut()
+    vi.spyOn(updateAccessTokenRepositorySpy, 'updateAccessToken').mockImplementationOnce(throwError)
     const promise = sut.auth(mockAuthenticationParams())
     await expect(promise).rejects.toThrow()
   })
