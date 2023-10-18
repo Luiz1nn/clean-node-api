@@ -1,26 +1,26 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { AddAccountRepository, LoadAccountByEmailRepository } from '~/data/protocols'
-import { HasherSpy, mockAddAccountRepository, mockLoadAccountByEmailRepository } from '~/data/test'
+import type { LoadAccountByEmailRepository } from '~/data/protocols'
+import { AddAccountRepositorySpy, HasherSpy, mockLoadAccountByEmailRepository } from '~/data/test'
 import { mockAccountModel, mockAddAccountParams, throwError } from '~/domain/test'
 import { DbAddAccount } from './db-add-account'
 
 type SutTypes = {
   sut: DbAddAccount
   hasherSpy: HasherSpy
-  addAccountRepositoryStub: AddAccountRepository
+  addAccountRepositorySpy: AddAccountRepositorySpy
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
 
 const makeSut = (): SutTypes => {
   const hasherSpy = new HasherSpy()
-  const addAccountRepositoryStub = mockAddAccountRepository()
+  const addAccountRepositorySpy = new AddAccountRepositorySpy()
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
   vi.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValue(Promise.resolve(null))
-  const sut = new DbAddAccount(hasherSpy, addAccountRepositoryStub, loadAccountByEmailRepositoryStub)
+  const sut = new DbAddAccount(hasherSpy, addAccountRepositorySpy, loadAccountByEmailRepositoryStub)
   return {
     sut,
     hasherSpy,
-    addAccountRepositoryStub,
+    addAccountRepositorySpy,
     loadAccountByEmailRepositoryStub
   }
 }
@@ -34,8 +34,8 @@ describe('DbAddAccount Usecase', () => {
   })
 
   it('should call AddAccountRepository with correct values', async () => {
-    const { sut, addAccountRepositoryStub, hasherSpy } = makeSut()
-    const addSpy = vi.spyOn(addAccountRepositoryStub, 'add')
+    const { sut, addAccountRepositorySpy, hasherSpy } = makeSut()
+    const addSpy = vi.spyOn(addAccountRepositorySpy, 'add')
     await sut.add(mockAddAccountParams())
     expect(addSpy).toHaveBeenCalledWith({
       name: 'any_name',
