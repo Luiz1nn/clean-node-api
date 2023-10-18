@@ -20,13 +20,16 @@ export class EncrypterSpy implements Encrypter {
   }
 }
 
-export const mockHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return await Promise.resolve(true)
-    }
+export class HashComparerSpy implements HashComparer {
+  plaintext: string
+  digest: string
+  isValid = true
+
+  async compare (plaintext: string, digest: string): Promise<boolean> {
+    this.plaintext = plaintext
+    this.digest = digest
+    return this.isValid
   }
-  return new HashComparerStub()
 }
 
 export const mockHasher = (): Hasher => {

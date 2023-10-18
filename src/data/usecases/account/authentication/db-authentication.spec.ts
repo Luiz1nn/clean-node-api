@@ -1,12 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
-import type {
-  HashComparer,
-  LoadAccountByEmailRepository,
-  UpdateAccessTokenRepository
-} from '~/data/protocols'
+import type { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '~/data/protocols'
 import {
   EncrypterSpy,
-  mockHashComparer,
+  HashComparerSpy,
   mockLoadAccountByEmailRepository,
   mockUpdateAccessTokenRepositoryStub
 } from '~/data/test'
@@ -16,19 +12,19 @@ import { DbAuthentication } from './db-authentication'
 type SutTypes = {
   sut: DbAuthentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
-  hashComparerStub: HashComparer
+  hashComparerSpy: HashComparerSpy
   encrypterSpy: EncrypterSpy
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
-  const hashComparerStub = mockHashComparer()
+  const hashComparerSpy = new HashComparerSpy()
   const encrypterSpy = new EncrypterSpy()
   const updateAccessTokenRepositoryStub = mockUpdateAccessTokenRepositoryStub()
   const sut = new DbAuthentication(
     loadAccountByEmailRepositoryStub,
-    hashComparerStub,
+    hashComparerSpy,
     encrypterSpy,
     updateAccessTokenRepositoryStub
   )
@@ -36,7 +32,7 @@ const makeSut = (): SutTypes => {
   return {
     sut,
     loadAccountByEmailRepositoryStub,
-    hashComparerStub,
+    hashComparerSpy,
     encrypterSpy,
     updateAccessTokenRepositoryStub
   }
@@ -66,23 +62,23 @@ describe('DbAuthentication UseCase', () => {
   })
 
   it('should call HashComparer with correct values', async () => {
-    const { sut, hashComparerStub } = makeSut()
+    const { sut, hashComparerSpy } = makeSut()
     const authenticationParams = mockAuthenticationParams()
-    const compareSpy = vi.spyOn(hashComparerStub, 'compare')
+    const compareSpy = vi.spyOn(hashComparerSpy, 'compare')
     await sut.auth(authenticationParams)
     expect(compareSpy).toHaveBeenCalledWith(authenticationParams.password, 'any_password')
   })
 
   it('should throw if HashComparer throws', async () => {
-    const { sut, hashComparerStub } = makeSut()
-    vi.spyOn(hashComparerStub, 'compare').mockImplementationOnce(throwError)
+    const { sut, hashComparerSpy } = makeSut()
+    vi.spyOn(hashComparerSpy, 'compare').mockImplementationOnce(throwError)
     const promise = sut.auth(mockAuthenticationParams())
     await expect(promise).rejects.toThrow()
   })
 
   it('should return null if HashComparer returns false', async () => {
-    const { sut, hashComparerStub } = makeSut()
-    vi.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(Promise.resolve(false))
+    const { sut, hashComparerSpy } = makeSut()
+    vi.spyOn(hashComparerSpy, 'compare').mockReturnValueOnce(Promise.resolve(false))
     const accessToken = await sut.auth(mockAuthenticationParams())
     expect(accessToken).toBeNull()
   })
