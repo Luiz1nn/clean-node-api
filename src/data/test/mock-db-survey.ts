@@ -1,7 +1,9 @@
+import { faker } from '@faker-js/faker'
 import { mockSurveyModel, mockSurveyModels } from '~/domain/test'
 import type {
   AddSurveyRepository,
   CheckSurveyByIdRepository,
+  LoadAnswersBySurveyRepository,
   LoadSurveyByIdRepository,
   LoadSurveysRepository
 } from '../protocols'
@@ -19,6 +21,19 @@ export class CheckSurveyByIdRepositorySpy implements CheckSurveyByIdRepository {
   result = true
 
   async checkById (id: string): Promise<CheckSurveyByIdRepository.Result> {
+    this.id = id
+    return this.result
+  }
+}
+
+export class LoadAnswersBySurveyRepositorySpy implements LoadAnswersBySurveyRepository {
+  id: string
+  result = [
+    faker.string.uuid(),
+    faker.string.uuid()
+  ]
+
+  async loadAnswers (id: string): Promise<LoadAnswersBySurveyRepository.Result> {
     this.id = id
     return this.result
   }
