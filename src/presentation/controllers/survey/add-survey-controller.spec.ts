@@ -1,37 +1,35 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
 import { throwError } from '~/domain/test'
-import type { AddSurvey } from '~/domain/usecases'
 import { badRequest, serverError, noContent } from '~/presentation/helpers'
-import type { HttpRequest, Validation } from '~/presentation/protocols'
-import { mockAddSurvey, mockValidation } from '~/presentation/test'
+import type { Validation } from '~/presentation/protocols'
+import { AddSurveySpy, mockValidation } from '~/presentation/test'
 import { AddSurveyController } from './add-survey-controller'
+import { faker } from '@faker-js/faker'
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    question: 'any_question',
-    answers: [{
-      image: 'any_image',
-      answer: 'any_answer'
-    }],
-    date: new Date()
-  }
+const mockRequest = (): AddSurveyController.Request => ({
+  question: faker.lorem.word(),
+  answers: [{
+    image: faker.image.url(),
+    answer: faker.lorem.word()
+  }]
+
 })
 
 type SutTypes = {
   sut: AddSurveyController
   validationStub: Validation
-  addSurveyStub: AddSurvey
+  addSurveySpy: AddSurveySpy
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
-  const addSurveyStub = mockAddSurvey()
-  const sut = new AddSurveyController(validationStub, addSurveyStub)
+  const addSurveySpy = new AddSurveySpy()
+  const sut = new AddSurveyController(validationStub, addSurveySpy)
   return {
     sut,
     validationStub,
-    addSurveyStub
+    addSurveySpy
   }
 }
 
@@ -49,7 +47,7 @@ describe('AddSurvey Controller', () => {
     const validateSpy = vi.spyOn(validationStub, 'validate')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest)
   })
 
   it('should return 400 if Validation fails', async () => {
@@ -60,16 +58,15 @@ describe('AddSurvey Controller', () => {
   })
 
   it('should call AddSurvey with correct values', async () => {
-    const { sut, addSurveyStub } = makeSut()
-    const addSpy = vi.spyOn(addSurveyStub, 'add')
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
+    const { sut, addSurveySpy } = makeSut()
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(addSurveySpy.params).toEqual({ ...request, date: new Date() })
   })
 
   it('should return 500 if AddSurvey throws', async () => {
-    const { sut, addSurveyStub } = makeSut()
-    vi.spyOn(addSurveyStub, 'add').mockImplementationOnce(throwError)
+    const { sut, addSurveySpy } = makeSut()
+    vi.spyOn(addSurveySpy, 'add').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
