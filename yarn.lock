@@ -3571,6 +3571,11 @@ mockdate@^3.0.5:
   resolved "https://registry.yarnpkg.com/mockdate/-/mockdate-3.0.5.tgz#789be686deb3149e7df2b663d2bc4392bc3284fb"
   integrity sha512-iniQP4rj1FhBdBYS/+eQv7j1tadJ9lJtdzgOpvsOHng/GbcDh2Fhdeq+ZRldrPYdXvCyfFUmFeEwEGXZB5I/AQ==
 
+mongo-round@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/mongo-round/-/mongo-round-1.0.0.tgz#9f22fed68480d61443dca3ebf5587e82c3004193"
+  integrity sha512-lwvLJv827Uks+3HnTOt1I/Qr78Avke3du1oMaFqFpTwtRKtOposNOKkfpGXQN4ZGpRN3XAS8fEppIJ4TUj0xQw==
+
 mongodb-connection-string-url@^2.5.4, mongodb-connection-string-url@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/mongodb-connection-string-url/-/mongodb-connection-string-url-2.6.0.tgz#57901bf352372abdde812c81be47b75c6b2ec5cf"

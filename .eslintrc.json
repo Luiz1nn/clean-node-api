@@ -12,6 +12,7 @@
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/no-namespace": "off",
+    "import/export": "off",
     "no-var": "off"
   }
 }

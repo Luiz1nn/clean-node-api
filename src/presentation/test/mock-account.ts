@@ -1,35 +1,39 @@
-import type { AccountModel } from '~/domain/models'
-import { mockAccountModel } from '~/domain/test'
-import type {
-  AddAccount,
-  Authentication,
-  LoadAccountByToken
-} from '~/domain/usecases'
+import { faker } from '@faker-js/faker'
+import type { AddAccount, Authentication, LoadAccountByToken } from '~/domain/usecases'
 
-export const mockAddAccount = (): AddAccount => {
-  class AddAccountStub implements AddAccount {
-    async add (account: AddAccount.Params): Promise<AccountModel> {
-      return await Promise.resolve(mockAccountModel())
-    }
+export class AddAccountSpy implements AddAccount {
+  params: AddAccount.Params
+  result = true
+
+  async add (params: AddAccount.Params): Promise<AddAccount.Result> {
+    this.params = params
+    return this.result
   }
-
-  return new AddAccountStub()
 }
 
-export const mockAuthentication = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    async auth (authentication: Authentication.Params): Promise<Authentication.Result> {
-      return await Promise.resolve('any_token')
-    }
+export class AuthenticationSpy implements Authentication {
+  params: Authentication.Params
+  result = {
+    accessToken: faker.string.uuid(),
+    name: faker.person.firstName()
   }
-  return new AuthenticationStub()
+
+  async auth (params: Authentication.Params): Promise<Authentication.Result> {
+    this.params = params
+    return this.result
+  }
 }
 
-export const mockLoadAccountByToken = (): LoadAccountByToken => {
-  class LoadAccountByTokenStub implements LoadAccountByToken {
-    async load (accessToken: string, role?: string): Promise<AccountModel> {
-      return await Promise.resolve(mockAccountModel())
-    }
+export class LoadAccountByTokenSpy implements LoadAccountByToken {
+  accessToken: string
+  role: string
+  result = {
+    id: faker.string.uuid()
   }
-  return new LoadAccountByTokenStub()
+
+  async load (accessToken: string, role?: string): Promise<LoadAccountByToken.Result> {
+    this.accessToken = accessToken
+    this.role = role
+    return this.result
+  }
 }
