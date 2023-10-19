@@ -10,13 +10,14 @@ let app: Express
 let surveyCollection: Collection
 let accountCollection: Collection
 
-const makeAccessToken = async (): Promise<string> => {
+const mockAccessToken = async (): Promise<string> => {
   const { insertedId } = await accountCollection.insertOne({
     name: 'Luis',
     email: 'luis@mail.com',
     password: '123'
   })
-  const accessToken = sign(insertedId.toHexString(), env.jwtSecret)
+  const id = insertedId.toHexString()
+  const accessToken = sign({ id }, env.jwtSecret)
   await accountCollection.updateOne({
     _id: insertedId
   }, {
@@ -54,7 +55,7 @@ describe('Survey Result Routes', () => {
     })
 
     it('should return 200 on save survey result with accessToken', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
       const { insertedId } = await surveyCollection.insertOne({
         question: 'Question',
         answers: [
@@ -84,7 +85,7 @@ describe('Survey Result Routes', () => {
     })
 
     it('should return 200 on load survey result with accessToken', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
       const { insertedId } = await surveyCollection.insertOne({
         question: 'Question',
         answers: [
