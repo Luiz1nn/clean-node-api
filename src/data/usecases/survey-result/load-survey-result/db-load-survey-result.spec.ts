@@ -1,24 +1,24 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
-import type { LoadSurveyByIdRepository, LoadSurveyResultRepository } from '~/data/protocols'
-import { mockLoadSurveyByIdRepository, mockLoadSurveyResultRepository } from '~/data/test'
+import type { LoadSurveyResultRepository } from '~/data/protocols'
+import { LoadSurveyByIdRepositorySpy, mockLoadSurveyResultRepository } from '~/data/test'
 import { mockSurveyResultModel, throwError } from '~/domain/test'
 import { DbLoadSurveyResult } from './db-load-survey-result'
 
 type SutTypes = {
   sut: DbLoadSurveyResult
   loadSurveyResultRepositoryStub: LoadSurveyResultRepository
-  loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
+  loadSurveyByIdRepositorySpy: LoadSurveyByIdRepositorySpy
 }
 
 const makeSut = (): SutTypes => {
   const loadSurveyResultRepositoryStub = mockLoadSurveyResultRepository()
-  const loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepository()
-  const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub, loadSurveyByIdRepositoryStub)
+  const loadSurveyByIdRepositorySpy = new LoadSurveyByIdRepositorySpy()
+  const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub, loadSurveyByIdRepositorySpy)
   return {
     sut,
     loadSurveyResultRepositoryStub,
-    loadSurveyByIdRepositoryStub
+    loadSurveyByIdRepositorySpy
   }
 }
 
@@ -46,8 +46,8 @@ describe('DbLoadSurveyResult Usecase', () => {
   })
 
   it('should call LoadSurveyByIdRepository if LoadSurveyResultRepository returns null', async () => {
-    const { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositoryStub } = makeSut()
-    const loadByIdSpy = vi.spyOn(loadSurveyByIdRepositoryStub, 'loadById')
+    const { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositorySpy } = makeSut()
+    const loadByIdSpy = vi.spyOn(loadSurveyByIdRepositorySpy, 'loadById')
     vi.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId').mockReturnValueOnce(Promise.resolve(null))
     await sut.load('any_survey_id')
     expect(loadByIdSpy).toHaveBeenCalledWith('any_survey_id')
