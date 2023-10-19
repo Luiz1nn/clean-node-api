@@ -1,7 +1,7 @@
-export interface CheckSurveybyId {
-  checkById: (id: string) => Promise<CheckSurveybyId.Result>
+export interface CheckSurveyById {
+  checkById: (id: string) => Promise<CheckSurveyById.Result>
 }
 
-export namespace CheckSurveybyId {
+export namespace CheckSurveyById {
   export type Result = boolean
 }

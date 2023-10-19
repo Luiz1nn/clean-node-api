@@ -1,30 +1,44 @@
-import type { SurveyModel } from '~/domain/models'
-import { mockSurveyModel, mockSurveyModels } from '~/domain/test'
-import type { AddSurvey, AddSurveyParams, LoadSurveyById, LoadSurveys } from '~/domain/usecases'
+import { faker } from '@faker-js/faker'
+import { mockSurveyModels } from '~/domain/test'
+import type { AddSurvey, CheckSurveyById, LoadAnswersBySurvey, LoadSurveys } from '~/domain/usecases'
 
-export const mockAddSurvey = (): AddSurvey => {
-  class AddSurveyStub implements AddSurvey {
-    async add (data: AddSurveyParams): Promise<void> {
-      return await Promise.resolve()
-    }
+export class AddSurveySpy implements AddSurvey {
+  params: AddSurvey.Params
+
+  async add (params: AddSurvey.Params): Promise<void> {
+    this.params = params
   }
-  return new AddSurveyStub()
 }
 
-export const mockLoadSurveyById = (): LoadSurveyById => {
-  class LoadSurveyByIdStub implements LoadSurveyById {
-    async loadById (id: string): Promise<SurveyModel> {
-      return await Promise.resolve(mockSurveyModel())
-    }
+export class CheckSurveyByIdSpy implements CheckSurveyById {
+  id: string
+  result = true
+
+  async checkById (id: string): Promise<CheckSurveyById.Result> {
+    this.id = id
+    return this.result
   }
-  return new LoadSurveyByIdStub()
 }
 
-export const mockLoadSurveys = (): LoadSurveys => {
-  class LoadSurveysStub implements LoadSurveys {
-    async load (): Promise<SurveyModel[]> {
-      return await Promise.resolve(mockSurveyModels())
-    }
+export class LoadAnswersBySurveySpy implements LoadAnswersBySurvey {
+  id: string
+  result = [
+    faker.lorem.word(),
+    faker.lorem.word()
+  ]
+
+  async loadAnswers (id: string): Promise<LoadAnswersBySurvey.Result> {
+    this.id = id
+    return this.result
   }
-  return new LoadSurveysStub()
+}
+
+export class LoadSurveysSpy implements LoadSurveys {
+  accountId: string
+  result = mockSurveyModels()
+
+  async load (accountId: string): Promise<LoadSurveys.Result> {
+    this.accountId = accountId
+    return this.result
+  }
 }

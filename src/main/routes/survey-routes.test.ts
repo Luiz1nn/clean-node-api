@@ -10,14 +10,15 @@ let surveyCollection: Collection
 let accountCollection: Collection
 let app: Express
 
-const makeAccessToken = async (): Promise<string> => {
+const mockAccessToken = async (): Promise<string> => {
   const { insertedId } = await accountCollection.insertOne({
     name: 'Luis',
     email: 'luis@mail.com',
     password: '123',
     role: 'admin'
   })
-  const accessToken = sign(insertedId.toHexString(), env.jwtSecret)
+  const id = insertedId.toHexString()
+  const accessToken = sign({ id }, env.jwtSecret)
   await accountCollection.updateOne({
     _id: insertedId
   }, {
@@ -66,7 +67,7 @@ describe('Survey Routes', () => {
     })
 
     it('should return 204 on add survey with valid accessToken', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -87,14 +88,14 @@ describe('Survey Routes', () => {
   })
 
   describe('GET /surveys', () => {
-    it('should return 403 on load survey without accessToken', async () => {
+    it('should return 403 on load surveys without accessToken', async () => {
       await request(app)
         .get('/api/surveys')
         .expect(403)
     })
 
-    it('should return 204 on load survey with valid accessToken', async () => {
-      const accessToken = await makeAccessToken()
+    it('should return 204 on load surveys with valid accessToken', async () => {
+      const accessToken = await mockAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)

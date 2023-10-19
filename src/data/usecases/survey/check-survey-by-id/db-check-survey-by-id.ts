@@ -1,9 +1,10 @@
 import type { CheckSurveyByIdRepository } from '~/data/protocols'
-import type { CheckSurveybyId } from '~/domain/usecases'
+import type { CheckSurveyById } from '~/domain/usecases'
 
-export class DbCheckSurveyById implements CheckSurveybyId {
+export class DbCheckSurveyById implements CheckSurveyById {
   constructor (private readonly checkSurveyByIdRepository: CheckSurveyByIdRepository) {}
-  async checkById (id: string): Promise<CheckSurveybyId.Result> {
+
+  async checkById (id: string): Promise<CheckSurveyById.Result> {
     return await this.checkSurveyByIdRepository.checkById(id)
   }
 }

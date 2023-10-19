@@ -1,9 +1,15 @@
 import { ObjectId } from 'mongodb'
-import type { AddSurveyRepository, LoadSurveyByIdRepository, LoadSurveysRepository } from '~/data/protocols'
+import type {
+  AddSurveyRepository,
+  CheckSurveyByIdRepository,
+  LoadAnswersBySurveyRepository,
+  LoadSurveyByIdRepository,
+  LoadSurveysRepository
+} from '~/data/protocols'
 import type { AddSurvey } from '~/domain/usecases'
 import { MongoHelper, QueryBuilder } from '~/infra/db'
 
-export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository {
+export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository, CheckSurveyByIdRepository, LoadAnswersBySurveyRepository {
   async add (surveyData: AddSurvey.Params): Promise<void> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     await surveyCollection.insertOne(surveyData)
@@ -46,5 +52,36 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const survey = await surveyCollection.findOne({ _id: new ObjectId(id) })
     return survey && MongoHelper.map(survey)
+  }
+
+  async loadAnswers (id: string): Promise<LoadAnswersBySurveyRepository.Result> {
+    const surveyCollection = await MongoHelper.getCollection('surveys')
+    const query = new QueryBuilder()
+      .match({
+        _id: new ObjectId(id)
+      })
+      .project({
+        _id: 0,
+        answers: '$answers.answer'
+      })
+      .build()
+    const surveys = await surveyCollection.aggregate(query).toArray()
+    return surveys[0]?.answers || []
+  }
+
+  async checkById (id: string): Promise<CheckSurveyByIdRepository.Result> {
+    const surveyCollection = await MongoHelper.getCollection('surveys')
+    const survey = await surveyCollection.findOne(
+      {
+        _id: new ObjectId(id)
+      },
+      {
+        projection: {
+          _id: 1
+        }
+      }
+
+    )
+    return survey !== null
   }
 }
