@@ -5,6 +5,5 @@ export default defineConfig({
   entry: ['src/**/*.ts', '!src/**/*.spec.ts', '!src/**/*.test.ts', '!src/**/test'],
   splitting: false,
   clean: true,
-  sourcemap: true,
   minify: true
 })
