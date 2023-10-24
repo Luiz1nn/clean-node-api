@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker'
 import { throwError } from '~/tests/domain/mocks'
 import { InvalidParamError } from '~/presentation/errors'
 import { forbidden, ok, serverError } from '~/presentation/helpers'
-import { LoadAnswersBySurveySpy, SaveSurveyResultSpy } from '~/presentation/test'
+import { LoadAnswersBySurveySpy, SaveSurveyResultSpy } from '~/tests/presentation/mocks'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 
 const mockRequest = (answer: string = null): SaveSurveyResultController.Request => ({

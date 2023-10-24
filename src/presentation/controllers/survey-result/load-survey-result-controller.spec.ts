@@ -3,7 +3,7 @@ import MockDate from 'mockdate'
 import { throwError } from '~/tests/domain/mocks'
 import { InvalidParamError } from '~/presentation/errors'
 import { forbidden, ok, serverError } from '~/presentation/helpers'
-import { CheckSurveyByIdSpy, LoadSurveyResultSpy } from '~/presentation/test'
+import { CheckSurveyByIdSpy, LoadSurveyResultSpy } from '~/tests/presentation/mocks'
 import { LoadSurveyResultController } from './load-survey-result-controller'
 import { faker } from '@faker-js/faker'
 

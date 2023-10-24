@@ -1,9 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import { MissingParamError } from '~/presentation/errors'
 import { badRequest, ok, serverError, unauthorized } from '~/presentation/helpers'
-import type { Validation } from '~/presentation/protocols'
 import { LoginController } from './login-controller'
-import { AuthenticationSpy, mockValidation } from '~/presentation/test'
+import { AuthenticationSpy, ValidationSpy } from '~/tests/presentation/mocks'
 import { faker } from '@faker-js/faker'
 import { throwError } from '~/tests/domain/mocks'
 
@@ -15,17 +14,17 @@ const mockRequest = (): LoginController.Request => ({
 type SutTypes = {
   sut: LoginController
   authenticationSpy: AuthenticationSpy
-  validationStub: Validation
+  validationSpy: ValidationSpy
 }
 
 const makeSut = (): SutTypes => {
   const authenticationSpy = new AuthenticationSpy()
-  const validationStub = mockValidation()
-  const sut = new LoginController(authenticationSpy, validationStub)
+  const validationSpy = new ValidationSpy()
+  const sut = new LoginController(authenticationSpy, validationSpy)
   return {
     sut,
     authenticationSpy,
-    validationStub
+    validationSpy
   }
 }
 
@@ -61,16 +60,16 @@ describe('Login Controller', () => {
   })
 
   it('should call Validation with correct value', async () => {
-    const { sut, validationStub } = makeSut()
-    const validateSpy = vi.spyOn(validationStub, 'validate')
+    const { sut, validationSpy } = makeSut()
+    const validateSpy = vi.spyOn(validationSpy, 'validate')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest)
   })
 
   it('should return 400 if Validation returns an error', async () => {
-    const { sut, validationStub } = makeSut()
-    vi.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+    const { sut, validationSpy } = makeSut()
+    vi.spyOn(validationSpy, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })

@@ -3,7 +3,7 @@ import { throwError } from '~/tests/domain/mocks'
 import { AuthMiddleware } from './auth-middleware'
 import { AccessDeniedError } from '../errors'
 import { forbidden, ok, serverError } from '../helpers'
-import { LoadAccountByTokenSpy } from '../test'
+import { LoadAccountByTokenSpy } from '../../../tests/presentation/mocks'
 
 const mockRequest = (): AuthMiddleware.Request => ({
   accessToken: 'any_token'

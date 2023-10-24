@@ -2,8 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
 import { throwError } from '~/tests/domain/mocks'
 import { badRequest, serverError, noContent } from '~/presentation/helpers'
-import type { Validation } from '~/presentation/protocols'
-import { AddSurveySpy, mockValidation } from '~/presentation/test'
+import { AddSurveySpy, ValidationSpy } from '~/tests/presentation/mocks'
 import { AddSurveyController } from './add-survey-controller'
 import { faker } from '@faker-js/faker'
 
@@ -18,17 +17,17 @@ const mockRequest = (): AddSurveyController.Request => ({
 
 type SutTypes = {
   sut: AddSurveyController
-  validationStub: Validation
+  validationSpy: ValidationSpy
   addSurveySpy: AddSurveySpy
 }
 
 const makeSut = (): SutTypes => {
-  const validationStub = mockValidation()
+  const validationSpy = new ValidationSpy()
   const addSurveySpy = new AddSurveySpy()
-  const sut = new AddSurveyController(validationStub, addSurveySpy)
+  const sut = new AddSurveyController(validationSpy, addSurveySpy)
   return {
     sut,
-    validationStub,
+    validationSpy,
     addSurveySpy
   }
 }
@@ -43,16 +42,16 @@ describe('AddSurvey Controller', () => {
   })
 
   it('should call Validation with correct values', async () => {
-    const { sut, validationStub } = makeSut()
-    const validateSpy = vi.spyOn(validationStub, 'validate')
+    const { sut, validationSpy } = makeSut()
+    const validateSpy = vi.spyOn(validationSpy, 'validate')
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest)
   })
 
   it('should return 400 if Validation fails', async () => {
-    const { sut, validationStub } = makeSut()
-    vi.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const { sut, validationSpy } = makeSut()
+    vi.spyOn(validationSpy, 'validate').mockReturnValueOnce(new Error())
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(new Error()))
   })
