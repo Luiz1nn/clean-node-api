@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
-import { AddAccountRepositorySpy, CheckAccountByEmailRepositorySpy, HasherSpy } from '~/data/test'
+import { DbAddAccount } from '~/data/usecases'
 import { mockAddAccountParams, throwError } from '~/domain/test'
-import { DbAddAccount } from './db-add-account'
+import { AddAccountRepositorySpy, CheckAccountByEmailRepositorySpy, HasherSpy } from '~/tests/data/mocks'
 
 type SutTypes = {
   sut: DbAddAccount

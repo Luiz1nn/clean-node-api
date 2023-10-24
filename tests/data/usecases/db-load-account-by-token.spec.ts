@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { faker } from '@faker-js/faker'
-import { DecrypterSpy, LoadAccountByTokenRepositorySpy } from '~/data/test'
+import { DbLoadAccountByToken } from '~/data/usecases'
 import { throwError } from '~/domain/test'
-import { DbLoadAccountByToken } from './db-load-account-by-token'
+import { DecrypterSpy, LoadAccountByTokenRepositorySpy } from '~/tests/data/mocks'
 
 type SutTypes = {
   sut: DbLoadAccountByToken

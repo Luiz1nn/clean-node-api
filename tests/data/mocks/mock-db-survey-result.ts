@@ -1,5 +1,5 @@
 import { mockSurveyResultModel } from '~/domain/test'
-import type { LoadSurveyResultRepository, SaveSurveyResultRepository } from '../protocols'
+import type { LoadSurveyResultRepository, SaveSurveyResultRepository } from '~/data/protocols'
 
 export class LoadSurveyResultRepositorySpy implements LoadSurveyResultRepository {
   surveyId: string

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import type { Decrypter, Encrypter, HashComparer, Hasher } from '../protocols'
+import type { Decrypter, Encrypter, HashComparer, Hasher } from '~/data/protocols'
 
 export class DecrypterSpy implements Decrypter {
   plaintext = faker.internet.password()

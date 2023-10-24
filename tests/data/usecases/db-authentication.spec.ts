@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
+import { DbAuthentication } from '~/data/usecases'
+import { mockAuthenticationParams, throwError } from '~/domain/test'
 import {
   EncrypterSpy,
   HashComparerSpy,
   LoadAccountByEmailRepositorySpy,
   UpdateAccessTokenRepositorySpy
-} from '~/data/test'
-import { mockAuthenticationParams, throwError } from '~/domain/test'
-import { DbAuthentication } from './db-authentication'
+} from '~/tests/data/mocks'
 
 type SutTypes = {
   sut: DbAuthentication

@@ -6,7 +6,7 @@ import type {
   LoadAnswersBySurveyRepository,
   LoadSurveyByIdRepository,
   LoadSurveysRepository
-} from '../protocols'
+} from '~/data/protocols'
 
 export class AddSurveyRepositorySpy implements AddSurveyRepository {
   params: AddSurveyRepository.Params

@@ -6,6 +6,6 @@ export default defineConfig({
     setupFiles: ['./setup/mongo-memory-server.ts']
   },
   resolve: {
-    alias: [{ find: '~', replacement: resolve(__dirname, './src') }]
+    alias: [{ find: '~/tests', replacement: resolve(__dirname, './tests') }, { find: '~', replacement: resolve(__dirname, './src') }]
   }
 })

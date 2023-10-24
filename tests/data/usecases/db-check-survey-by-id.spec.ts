@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
 import { faker } from '@faker-js/faker'
-import { CheckSurveyByIdRepositorySpy } from '~/data/test'
+import { DbCheckSurveyById } from '~/data/usecases'
 import { throwError } from '~/domain/test'
-import { DbCheckSurveyById } from './db-check-survey-by-id'
+import { CheckSurveyByIdRepositorySpy } from '~/tests/data/mocks'
 
 type SutTypes = {
   sut: DbCheckSurveyById

@@ -4,3 +4,4 @@ coverage
 build
 data
 !src/data
+!tests/data

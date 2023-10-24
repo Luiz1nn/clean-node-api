@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
-import { LoadSurveyResultRepositorySpy, SaveSurveyResultRepositorySpy } from '~/data/test'
+import { DbSaveSurveyResult } from '~/data/usecases'
 import { mockSaveSurveyResultParams, throwError } from '~/domain/test'
-import { DbSaveSurveyResult } from './db-save-survey-result'
+import { LoadSurveyResultRepositorySpy, SaveSurveyResultRepositorySpy } from '~/tests/data/mocks'
 
 type SutTypes = {
   sut: DbSaveSurveyResult
