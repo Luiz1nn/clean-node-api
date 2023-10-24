@@ -1,24 +1,15 @@
 import { describe, expect, it, vi } from 'vitest'
+import { EmailValidatorAdapter } from '~/infra/validators'
+import { makeSignUpValidation } from '~/main/factories'
 import type { Validation } from '~/presentation/protocols'
-import type { EmailValidator } from '~/validation/protocols'
 import {
   ValidationComposite,
   RequiredFieldValidation,
   CompareFieldsValidation,
   EmailValidation
 } from '~/validation/validators'
-import { makeSignUpValidation } from './signup-validation-factory'
 
 vi.mock('~/validation/validators')
-
-const makeEmailValidator = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-      return true
-    }
-  }
-  return new EmailValidatorStub()
-}
 
 describe('SignUpValidation Factory', () => {
   it('should call ValidationComposite with all validations', () => {
@@ -28,7 +19,7 @@ describe('SignUpValidation Factory', () => {
       validations.push(new RequiredFieldValidation(field))
     }
     validations.push(new CompareFieldsValidation('password', 'passwordConfirmation'))
-    validations.push(new EmailValidation('email', makeEmailValidator()))
+    validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
 })

@@ -1,8 +1,8 @@
 import request from 'supertest'
 import type { Express } from 'express'
 import { beforeAll, describe, it } from 'vitest'
-import { noCache } from './no-cache'
-import { setupApp } from '../config'
+import { setupApp } from '~/main/config'
+import { noCache } from '~/main/middlewares'
 
 let app: Express
 

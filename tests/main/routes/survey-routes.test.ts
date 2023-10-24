@@ -4,7 +4,7 @@ import type { Express } from 'express'
 import type { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
 import { MongoHelper } from '~/infra/db'
-import { env, setupApp } from '../config'
+import { env, setupApp } from '~/main/config'
 
 let surveyCollection: Collection
 let accountCollection: Collection

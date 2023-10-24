@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { faker } from '@faker-js/faker'
+import { LogControllerDecorator } from '~/main/decorators'
 import { ok, serverError } from '~/presentation/helpers'
 import type { Controller, HttpResponse } from '~/presentation/protocols'
-import { LogControllerDecorator } from './log-controller-decorator'
 import { LogErrorRepositorySpy } from 'tests/data/mocks'
 
 class ControllerSpy implements Controller {

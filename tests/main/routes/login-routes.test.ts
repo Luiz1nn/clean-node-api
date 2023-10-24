@@ -4,7 +4,7 @@ import { hash } from 'bcrypt'
 import type { Express } from 'express'
 import type { Collection } from 'mongodb'
 import { MongoHelper } from '~/infra/db'
-import { setupApp } from '../config'
+import { setupApp } from '~/main/config'
 
 let accountCollection: Collection
 let app: Express
