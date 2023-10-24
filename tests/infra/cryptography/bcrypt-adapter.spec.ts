@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import bcrypt from 'bcrypt'
-import { BcryptAdapter } from './bcrypt-adapter'
+import { BcryptAdapter } from '~/infra/cryptography'
 
 const salt = 12
 const makeSut = (): BcryptAdapter => {

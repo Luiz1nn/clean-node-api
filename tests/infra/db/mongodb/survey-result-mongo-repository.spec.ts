@@ -1,9 +1,8 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { ObjectId, type Collection } from 'mongodb'
 import type { SurveyModel } from '~/domain/models'
-import { MongoHelper } from '~/infra/db'
-import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import { mockAddAccountParams, mockAddSurveyParams } from '~/domain/test'
+import { MongoHelper, SurveyResultMongoRepository } from '~/infra/db'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
