@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
-import type { SurveyResultModel } from '../models'
-import { type SaveSurveyResult } from '../usecases'
+import type { SurveyResultModel } from '~/domain/models'
+import { type SaveSurveyResult } from '~/domain/usecases'
 
 export const mockSaveSurveyResultParams = (): SaveSurveyResult.Params => ({
   accountId: faker.string.uuid(),

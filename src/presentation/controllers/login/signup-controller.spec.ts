@@ -4,7 +4,7 @@ import { EmailInUseError, MissingParamError, ServerError } from '~/presentation/
 import type { Validation } from '~/presentation/protocols'
 import { AddAccountSpy, AuthenticationSpy, mockValidation } from '~/presentation/test'
 import { SignUpController } from './signup-controller'
-import { throwError } from '~/domain/test'
+import { throwError } from '~/tests/domain/mocks'
 import { faker } from '@faker-js/faker'
 
 const mockRequest = (): SignUpController.Request => {

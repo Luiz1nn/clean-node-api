@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
 import { faker } from '@faker-js/faker'
-import { throwError } from '~/domain/test'
+import { throwError } from '~/tests/domain/mocks'
 import { noContent, ok, serverError } from '~/presentation/helpers'
 import { LoadSurveysSpy } from '~/presentation/test'
 import { LoadSurveysController } from './load-surveys-controller'

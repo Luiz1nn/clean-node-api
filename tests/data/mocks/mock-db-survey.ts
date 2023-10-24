@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { mockSurveyModel, mockSurveyModels } from '~/domain/test'
 import type {
   AddSurveyRepository,
   CheckSurveyByIdRepository,
@@ -7,6 +6,7 @@ import type {
   LoadSurveyByIdRepository,
   LoadSurveysRepository
 } from '~/data/protocols'
+import { mockSurveyModel, mockSurveyModels } from '~/tests/domain/mocks'
 
 export class AddSurveyRepositorySpy implements AddSurveyRepository {
   params: AddSurveyRepository.Params

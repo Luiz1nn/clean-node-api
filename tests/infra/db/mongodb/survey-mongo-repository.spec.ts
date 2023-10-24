@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { ObjectId, type Collection } from 'mongodb'
 import FakeObjectId from 'bson-objectid'
 import { MongoHelper, SurveyMongoRepository } from '~/infra/db'
-import { mockAddAccountParams, mockAddSurveyParams } from '~/domain/test'
+import { mockAddAccountParams, mockAddSurveyParams } from '~/tests/domain/mocks'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection

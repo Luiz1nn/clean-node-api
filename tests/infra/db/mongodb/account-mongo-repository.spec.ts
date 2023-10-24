@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import type { Collection } from 'mongodb'
 import { faker } from '@faker-js/faker'
-import { mockAddAccountParams } from '~/domain/test'
 import { AccountMongoRepository, MongoHelper } from '~/infra/db'
+import { mockAddAccountParams } from '~/tests/domain/mocks'
 
 const makeSut = (): AccountMongoRepository => {
   return new AccountMongoRepository()

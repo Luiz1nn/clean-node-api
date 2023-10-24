@@ -5,7 +5,7 @@ import type { Validation } from '~/presentation/protocols'
 import { LoginController } from './login-controller'
 import { AuthenticationSpy, mockValidation } from '~/presentation/test'
 import { faker } from '@faker-js/faker'
-import { throwError } from '~/domain/test'
+import { throwError } from '~/tests/domain/mocks'
 
 const mockRequest = (): LoginController.Request => ({
   email: faker.internet.email(),

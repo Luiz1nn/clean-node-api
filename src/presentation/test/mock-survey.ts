@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { mockSurveyModels } from '~/domain/test'
+import { mockSurveyModels } from '~/tests/domain/mocks'
 import type { AddSurvey, CheckSurveyById, LoadAnswersBySurvey, LoadSurveys } from '~/domain/usecases'
 
 export class AddSurveySpy implements AddSurvey {

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
-import { throwError } from '~/domain/test'
+import { throwError } from '~/tests/domain/mocks'
 import { badRequest, serverError, noContent } from '~/presentation/helpers'
 import type { Validation } from '~/presentation/protocols'
 import { AddSurveySpy, mockValidation } from '~/presentation/test'

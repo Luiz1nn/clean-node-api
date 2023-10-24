@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { throwError } from '~/domain/test'
+import { throwError } from '~/tests/domain/mocks'
 import { AuthMiddleware } from './auth-middleware'
 import { AccessDeniedError } from '../errors'
 import { forbidden, ok, serverError } from '../helpers'

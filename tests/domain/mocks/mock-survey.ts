@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
-import type { SurveyModel } from '../models'
-import type { AddSurvey } from '../usecases'
+import type { SurveyModel } from '~/domain/models'
+import type { AddSurvey } from '~/domain/usecases'
 
 export const mockAddSurveyParams = (): AddSurvey.Params => ({
   question: faker.lorem.word(),

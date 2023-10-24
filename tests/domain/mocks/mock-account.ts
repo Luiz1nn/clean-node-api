@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import type { AddAccount, Authentication } from '../usecases'
+import type { AddAccount, Authentication } from '~/domain/usecases'
 
 export const mockAddAccountParams = (): AddAccount.Params => ({
   name: faker.person.firstName(),
