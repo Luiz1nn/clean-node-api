@@ -52,14 +52,33 @@ describe('Account Mongo Repository', () => {
     })
   })
 
+  describe('checkByEmail()', () => {
+    it('should return true if email is valid', async () => {
+      const sut = makeSut()
+      const addAccountParams = mockAddAccountParams()
+      await accountCollection.insertOne(addAccountParams)
+      const exists = await sut.checkByEmail(addAccountParams.email)
+      expect(exists).toBe(true)
+    })
+
+    it('should return true if email is valid', async () => {
+      const sut = makeSut()
+      const exists = await sut.checkByEmail(faker.internet.email())
+      expect(exists).toBe(false)
+    })
+  })
+
   describe('updateAccessToken()', () => {
     it('should update the account accessToken on updateAccessToken success', async () => {
       const sut = makeSut()
-      const { insertedId } = await accountCollection.insertOne(mockAddAccountParams())
-      await sut.updateAccessToken(insertedId.toHexString(), 'any_token')
-      const account = await accountCollection.findOne({ _id: insertedId }) as any
+      const res = await accountCollection.insertOne(mockAddAccountParams())
+      const fakeAccount = await accountCollection.findOne({ _id: res.insertedId })
+      expect(fakeAccount.accessToken).toBeFalsy()
+      const accessToken = faker.string.uuid()
+      await sut.updateAccessToken(fakeAccount._id.toHexString(), accessToken)
+      const account = await accountCollection.findOne({ _id: fakeAccount._id })
       expect(account).toBeTruthy()
-      expect(account.accessToken).toBe('any_token')
+      expect(account.accessToken).toBe(accessToken)
     })
   })
 
