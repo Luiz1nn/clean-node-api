@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
+import { faker } from '@faker-js/faker'
+import { LoginController } from '~/presentation/controllers'
 import { MissingParamError } from '~/presentation/errors'
 import { badRequest, ok, serverError, unauthorized } from '~/presentation/helpers'
-import { LoginController } from './login-controller'
-import { AuthenticationSpy, ValidationSpy } from '~/tests/presentation/mocks'
-import { faker } from '@faker-js/faker'
 import { throwError } from '~/tests/domain/mocks'
+import { AuthenticationSpy, ValidationSpy } from '~/tests/presentation/mocks'
 
 const mockRequest = (): LoginController.Request => ({
   email: faker.internet.email(),
@@ -61,16 +61,15 @@ describe('Login Controller', () => {
 
   it('should call Validation with correct value', async () => {
     const { sut, validationSpy } = makeSut()
-    const validateSpy = vi.spyOn(validationSpy, 'validate')
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(validationSpy.input).toEqual(request)
   })
 
   it('should return 400 if Validation returns an error', async () => {
     const { sut, validationSpy } = makeSut()
-    vi.spyOn(validationSpy, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+    validationSpy.error = new MissingParamError(faker.lorem.word())
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+    expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })
 })

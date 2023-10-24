@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
-import { throwError } from '~/tests/domain/mocks'
-import { badRequest, serverError, noContent } from '~/presentation/helpers'
-import { AddSurveySpy, ValidationSpy } from '~/tests/presentation/mocks'
-import { AddSurveyController } from './add-survey-controller'
 import { faker } from '@faker-js/faker'
+import { AddSurveyController } from '~/presentation/controllers'
+import { badRequest, serverError, noContent } from '~/presentation/helpers'
+import { throwError } from '~/tests/domain/mocks'
+import { AddSurveySpy, ValidationSpy } from '~/tests/presentation/mocks'
 
 const mockRequest = (): AddSurveyController.Request => ({
   question: faker.lorem.word(),
@@ -43,17 +43,16 @@ describe('AddSurvey Controller', () => {
 
   it('should call Validation with correct values', async () => {
     const { sut, validationSpy } = makeSut()
-    const validateSpy = vi.spyOn(validationSpy, 'validate')
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(validationSpy.input).toEqual(request)
   })
 
   it('should return 400 if Validation fails', async () => {
     const { sut, validationSpy } = makeSut()
-    vi.spyOn(validationSpy, 'validate').mockReturnValueOnce(new Error())
+    validationSpy.error = new Error()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(badRequest(new Error()))
+    expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })
 
   it('should call AddSurvey with correct values', async () => {

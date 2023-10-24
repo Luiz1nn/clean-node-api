@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
+import { AccessDeniedError } from '~/presentation/errors'
+import { forbidden, ok, serverError } from '~/presentation/helpers'
+import { AuthMiddleware } from '~/presentation/middlewares'
 import { throwError } from '~/tests/domain/mocks'
-import { AuthMiddleware } from './auth-middleware'
-import { AccessDeniedError } from '../errors'
-import { forbidden, ok, serverError } from '../helpers'
-import { LoadAccountByTokenSpy } from '../../../tests/presentation/mocks'
+import { LoadAccountByTokenSpy } from '~/tests/presentation/mocks'
 
 const mockRequest = (): AuthMiddleware.Request => ({
   accessToken: 'any_token'

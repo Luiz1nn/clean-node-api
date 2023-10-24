@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
-import { badRequest, ok, serverError, forbidden } from '~/presentation/helpers'
-import { EmailInUseError, MissingParamError, ServerError } from '~/presentation/errors'
-import { AddAccountSpy, AuthenticationSpy, ValidationSpy } from '~/tests/presentation/mocks'
-import { SignUpController } from './signup-controller'
-import { throwError } from '~/tests/domain/mocks'
 import { faker } from '@faker-js/faker'
+import { SignUpController } from '~/presentation/controllers'
+import { EmailInUseError, MissingParamError, ServerError } from '~/presentation/errors'
+import { badRequest, ok, serverError, forbidden } from '~/presentation/helpers'
+import { throwError } from '~/tests/domain/mocks'
+import { AddAccountSpy, AuthenticationSpy, ValidationSpy } from '~/tests/presentation/mocks'
 
 const mockRequest = (): SignUpController.Request => {
   const password = faker.internet.password()
@@ -39,9 +39,7 @@ const makeSut = (): SutTypes => {
 describe('SignUp Controller', () => {
   it('should return 500 if AddAccount throws', async () => {
     const { sut, addAccountSpy } = makeSut()
-    vi.spyOn(addAccountSpy, 'add').mockImplementationOnce(() => {
-      throw new Error()
-    })
+    vi.spyOn(addAccountSpy, 'add').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new ServerError(undefined)))
   })
@@ -59,7 +57,7 @@ describe('SignUp Controller', () => {
 
   it('should return 403 if AddAccount returns null', async () => {
     const { sut, addAccountSpy } = makeSut()
-    vi.spyOn(addAccountSpy, 'add').mockReturnValueOnce(Promise.resolve(null))
+    addAccountSpy.result = false
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
@@ -72,17 +70,16 @@ describe('SignUp Controller', () => {
 
   it('should call Validation with correct value', async () => {
     const { sut, validationSpy } = makeSut()
-    const validateSpy = vi.spyOn(validationSpy, 'validate')
     const request = mockRequest()
     await sut.handle(request)
-    expect(validateSpy).toHaveBeenCalledWith(request)
+    expect(validationSpy.input).toEqual(request)
   })
 
   it('should return 400 if Validation returns an error', async () => {
     const { sut, validationSpy } = makeSut()
-    vi.spyOn(validationSpy, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+    validationSpy.error = new MissingParamError(faker.lorem.word())
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+    expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })
 
   it('should call Authentication with correct values', async () => {

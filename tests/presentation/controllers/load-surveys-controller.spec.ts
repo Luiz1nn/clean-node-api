@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
 import { faker } from '@faker-js/faker'
-import { throwError } from '~/tests/domain/mocks'
+import { LoadSurveysController } from '~/presentation/controllers'
 import { noContent, ok, serverError } from '~/presentation/helpers'
+import { throwError } from '~/tests/domain/mocks'
 import { LoadSurveysSpy } from '~/tests/presentation/mocks'
-import { LoadSurveysController } from './load-surveys-controller'
 
 const mockRequest = (): LoadSurveysController.Request => ({ accountId: faker.string.uuid() })
 

@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import MockDate from 'mockdate'
-import { throwError } from '~/tests/domain/mocks'
+import { faker } from '@faker-js/faker'
+import { LoadSurveyResultController } from '~/presentation/controllers'
 import { InvalidParamError } from '~/presentation/errors'
 import { forbidden, ok, serverError } from '~/presentation/helpers'
+import { throwError } from '~/tests/domain/mocks'
 import { CheckSurveyByIdSpy, LoadSurveyResultSpy } from '~/tests/presentation/mocks'
-import { LoadSurveyResultController } from './load-survey-result-controller'
-import { faker } from '@faker-js/faker'
 
 const mockRequest = (): LoadSurveyResultController.Request => ({
   surveyId: faker.string.uuid(),
